@@ -220,6 +220,21 @@ h4.sub-title { font-size: 17px; color: var(--ink); font-weight: 600; margin: 22p
 .intuition { background: rgba(217,168,108,0.12); border-radius: 10px; padding: 14px 18px; margin: 14px 0; font-size: 14.5px; border-right: 3px solid var(--gold); }
 .intuition b { color: var(--terra); }
 
+/* ===== طبقة «افهمها ببساطة» ===== */
+.simple-box{background:rgba(217,168,108,0.10);border-radius:10px;border-right:3px solid var(--gold);margin:14px 0;padding:0}
+.simple-box summary{cursor:pointer;padding:10px 16px;font-weight:700;color:var(--terra);font-size:13.5px;list-style:none;display:flex;align-items:center;gap:8px;user-select:none}
+.simple-box summary::-webkit-details-marker{display:none}
+.simple-box summary::before{content:"🧠";font-size:15px}
+.simple-box[open] summary{border-bottom:1px dashed rgba(217,168,108,0.5);margin-bottom:4px}
+.simple-box .s-body{padding:8px 16px 12px;font-size:14.5px;line-height:1.95}
+.simple-box .s-body b{color:var(--terra)}
+.simple-box .s-bridge{display:block;margin-top:6px;font-size:12px;color:var(--ink-soft)}
+body.hide-simple .simple-box{display:none}
+.icon-btn.simple-on{background:var(--gold);color:#fff}
+.ix-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--ink);border-radius:8px;padding:3px 10px;font-size:12px;font-family:inherit;cursor:pointer}
+.ix-btn:hover{border-color:var(--gold)}
+@media print{.simple-box{display:block}}
+
 .concept-grid { display: grid; gap: 14px; margin: 20px 0; }
 .concept {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--r);
@@ -685,7 +700,8 @@ code.inline{unicode-bidi:isolate}
 </aside>
 <div class="main">
   <div class="topbar"><div style="display:flex;align-items:center;gap:12px;"><button class="icon-btn menu-btn" id="menuBtn" aria-label="القائمة">☰</button><div class="crumb" id="crumb">الرئيسية</div></div>
-    <div class="actions"><button class="icon-btn" id="themeBtn" aria-label="الوضع الليلي">🌙</button></div></div>
+    <div class="actions"><button class="icon-btn" id="simpleBtn" aria-label="إظهار/إخفاء الشرح المبسّط" title="شرح مبسّط: إظهار/إخفاء">🧠</button>
+    <button class="icon-btn" id="themeBtn" aria-label="الوضع الليلي">🌙</button></div></div>
   <div class="content"><section class="stage-section active" id="home"><div class="hero">
   <div class="eyebrow">من الأساس إلى الوكلاء · Foundations → Agents</div>
   <h1>الذكاء الاصطناعي<br>بفهم عميق</h1>
@@ -787,6 +803,7 @@ select(2);
 <section class="stage-section" id="p0"><div class="stage-hero blue" style=""><span class="big-num">٠</span><div class="eyebrow">المرحلة ٠ · تأسيس</div><h2>الأساس الرياضي</h2><div class="tools">٣ أسابيع</div><div class="read-time">جاهزة · ٣ أسابيع</div></div><details class="en-box" open dir="ltr"><summary>English summary</summary><p class="en-text">Mathematics for AI is a language, not a list of formulas. This phase builds the ideas used everywhere later: vectors and matrices (a dot product measures alignment, a matrix is a transformation, and SVD gives the best low-rank approximation), derivatives (the gradient points uphill, and gradient descent on a quadratic is stable only when the learning rate is below 2/curvature), probability (with 1% prevalence, 80% sensitivity and a 9.6% false-positive rate, a positive test means only a 7.8% chance of disease), and likelihood (cross-entropy equals entropy plus KL divergence, so a loss has a floor). Each theorem is checked numerically in the code.</p><div class="en-terms"><b>Key terms:</b> <span>dot product</span><span>cosine similarity</span><span>SVD</span><span>gradient descent</span><span>Bayes' rule</span><span>base rate</span><span>entropy</span><span>cross-entropy</span></div></details><div class="intro-box"><b>القاعدة في هذي المرحلة:</b> الرياضيات هنا مو «مادة تحفظها»، هي <b>لغة</b> تفهم فيها لاحقًا ليش attention تستخدم الضرب النقطي، وليش الـ loss هو cross-entropy، وليش LoRA تشتغل. وعشان الرياضيات تكون موثوقة، كل نظرية هنا <b>تتحقق منها بتجربة عددية</b> (مثلًا: خطأ الـ SVD يطابق الصيغة النظرية، والتدرّج التحليلي يطابق العددي)، وأكواد الانحدار تُقارن بـ scikit-learn. الحالات الواقعية موثّقة بمصادرها في آخر المرحلة.</div>
 
 <h3 class="sec-title">٠.١ المتّجهات والضرب النقطي: «التشابه» رياضيًا</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">تخيّل إنك تصف شخصًا بأرقام: (الطول، الوزن، العمر). هذي القائمة هي <b>متّجه</b> — وصف بسيط بأرقام. الآن لو عندك شخصين، وتبغى تعرف كم متشابهين: ما تقارن رقم برقم، بل تنظر لـ<b>زاوية الاتجاه</b> بين وصفَيهما. نفس الاتجاه = اهتمامات متطابقة، اتجاهان متعامدان = ما بينهم علاقة. الضرب النقطي هو الطريقة السريعة لقياس هذي الزاوية بضربة وحدة، وهذا هو «التشابه» اللي تستخدمه محركات البحث ومقترحات الأفلام.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>المتّجه قائمة أرقام = سهم في فضاء. الضرب النقطي له تفسيران يتطابقان: جبري (مجموع حاصل ضرب الإحداثيات) وهندسي: <b>a·b = |a|·|b|·cos θ</b> حيث θ الزاوية بينهما. معناه: الضرب النقطي يقيس «كم يشير المتّجهان لنفس الاتجاه» مضروبًا بطوليهما. لو قسمنا على الطولين نحصل على <span class="term">cosine similarity</span> (من −١ إلى ١) اللي لا يتأثر بالطول، وهذا بالضبط اللي يلزمنا في البحث الدلالي (المرحلة ٦) وفي attention (المرحلة ٣).</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
@@ -814,8 +831,72 @@ cosine(d1, 10*d1) = 1.000  (length does not matter, direction does)</pre></div>
 <p>الصيغتان أعطتا نفس الرقم (١.٠٨٣٨)، والمتّجهان العموديان ضربهما ٠، ومتّجهات المواضيع المختلفة cosine بينها ٠. <b>تطبيق:</b> تمثيل جملتين بعدّ الكلمات (refund، shipping، warranty): الجملتان عن الاسترداد cosine بينهما ٠.٩٩٠، والمختلفتان ٠.٠٠٠. وتكبير المتّجه ١٠ مرات ما غيّر شي (١.٠٠٠): الاتجاه هو المعنى، مو الطول. هذي فكرة كل محرك بحث دلالي.</p>
 
 <h3 class="sec-title">٠.٢ المصفوفات: تحويلات، والضرب = تركيب</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">المصفوفة مو جدول أرقام، هي <b>وصفة تحويل</b>. تخيّل خبّاز مع عجينة: يفردها، يقلبها، يضغطها — كل حركة من هذي لها «وصفة رقمية» هي المصفوفة. ولو سوّى حركتين ورا بعض؟ النتيجة النهائية نفسها لو طبّق «وصفة مدمجة» وحدة — وضرب المصفوفات هو بالضبط دمج الوصفتين. لهذا الترتيب مهم: فرد ثم قلب ≠ قلب ثم فرد.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>المصفوفة ما هي «جدول أرقام» فقط، هي <b>دالة خطية</b>: تأخذ متّجه وترجّع متّجه (تدوير، تمديد، إسقاط). ومن هنا: ضرب مصفوفتين = تركيب تحويلين (نطبّق الأول ثم الثاني). ولهذا الترتيب مهم (AB ≠ BA). <b>المحدِّد (determinant)</b> يقيس كم يغيّر التحويل المساحة (أو الحجم)، ولو صفر فالتحويل يسطّح الفضاء ويضيّع معلومة، و<b>الرتبة (rank)</b> هي بُعد ما يبقى بعد التحويل.</p>
+
+<div class="ixw" id="mxt">
+<div class="ix-head"><span class="ix-badge">🧪 جرّب بنفسك</span><b>المصفوفة = تحويل: اسحب رأسي السهمين الأخضر والأزرق وشوف كيف يتغيّر الفضاء (٠.٢)</b></div>
+<div class="ix-controls"><label style="direction:ltr" class="mono">A = <output id="mxt-m" style="white-space:pre;line-height:1.3"></output></label>
+<label>det = <output id="mxt-det"></output></label>
+<button class="ix-btn" data-p="1,0,0,1">هوية</button>
+<button class="ix-btn" data-p="0.7,-0.7,0.7,0.7">تدوير ٤٥°</button>
+<button class="ix-btn" data-p="1.8,0,0,0.9">تمديد/ضغط</button>
+<button class="ix-btn" data-p="1,1,0,1">قص</button>
+<button class="ix-btn" data-p="1,2,0.5,1">تسطيح!</button>
+<span class="ix-note" id="mxt-msg" style="margin:0;flex:1 1 100%"></span></div>
+<svg id="mxt-svg" viewBox="0 0 380 260" style="touch-action:none"></svg>
+<div class="ix-note">المربع المتقطع = مساحة الوحدة قبل التحويل، والمضلع الذهبي = صورتها بعد التحويل. السهمان هما صورة متجهي الأساس (١٬٠) و(٠٬١) — وهما بالضبط عمودا المصفوفة. جرّب «تسطيح!» لتشوف det=0: التحويل يسطّح المستوى كله على خط واحد فتضيع معلومة (وهذا معنى رتبة أقل). ولاحظ إن السحب على خط مستقيم يعني العمودين صاروا على خط واحد.</div>
+</div>
+<script>
+(function(){
+var NS="http://www.w3.org/2000/svg",svg=document.getElementById("mxt-svg");
+var U=28,CX=190,CY=130;
+function el(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e}
+function X(x){return CX+x*U}function Y(y){return CY-y*U}
+for(var gx=-6;gx<=6;gx++)el("line",{x1:X(gx),y1:0,x2:X(gx),y2:260,stroke:"#e0e8e4","stroke-width":gx===0?1.5:0.5});
+for(var gy=-4;gy<=4;gy++)el("line",{x1:0,y1:Y(gy),x2:380,y2:Y(gy),stroke:"#e0e8e4","stroke-width":gy===0?1.5:0.5});
+el("rect",{x:X(0),y:Y(1),width:U,height:U,fill:"none",stroke:"#9db0a8","stroke-dasharray":"4 3"});
+var poly=el("polygon",{fill:"rgba(217,168,108,0.35)",stroke:"#D9A86C","stroke-width":1.5});
+var mk={a:1,b:0,c:0,d:1};
+var arr1=el("line",{stroke:"#2d7a60","stroke-width":3,"stroke-linecap":"round"}),
+    arr2=el("line",{stroke:"#3a7bb5","stroke-width":3,"stroke-linecap":"round"}),
+    h1=el("circle",{r:8,fill:"#2d7a60",cursor:"grab","fill-opacity":0.9}),
+    h2=el("circle",{r:8,fill:"#3a7bb5",cursor:"grab","fill-opacity":0.9}),
+    lb1=el("text",{"font-size":11,fill:"#2d7a60","font-weight":700}),
+    lb2=el("text",{"font-size":11,fill:"#3a7bb5","font-weight":700});
+function upd(){
+var a=mk.a,b=mk.b,c=mk.c,d=mk.d;
+poly.setAttribute("points",X(0)+","+Y(0)+" "+X(a)+","+Y(c)+" "+X(a+b)+","+Y(c+d)+" "+X(b)+","+Y(d));
+arr1.setAttribute("x1",X(0));arr1.setAttribute("y1",Y(0));arr1.setAttribute("x2",X(a));arr1.setAttribute("y1",Y(0));arr1.setAttribute("x2",X(a));arr1.setAttribute("y2",Y(c));
+arr2.setAttribute("x1",X(0));arr2.setAttribute("y1",Y(0));arr2.setAttribute("x2",X(b));arr2.setAttribute("y2",Y(d));
+h1.setAttribute("cx",X(a));h1.setAttribute("cy",Y(c));
+h2.setAttribute("cx",X(b));h2.setAttribute("cy",Y(d));
+lb1.setAttribute("x",X(a)+10);lb1.setAttribute("y",Y(c));lb1.textContent="("+(+a.toFixed(1))+", "+(+c.toFixed(1))+")";
+lb2.setAttribute("x",X(b)+10);lb2.setAttribute("y",Y(d));lb2.textContent="("+(+b.toFixed(1))+", "+(+d.toFixed(1))+")";
+var det=a*d-b*c;
+document.getElementById("mxt-m").textContent="⎡"+(+a.toFixed(1))+"  "+(+b.toFixed(1))+"⎤\n⎣"+(+c.toFixed(1))+"  "+(+d.toFixed(1))+"⎦";
+document.getElementById("mxt-det").textContent=(+det.toFixed(2))+"";
+var m=document.getElementById("mxt-msg");
+if(Math.abs(det)<0.05){m.innerHTML="<b style='color:var(--terra)'>det ≈ 0: التحويل سطّح المستوى على خط واحد</b> — المساحة صفر، رتبة ١، وضاعت معلومة كاملة ما تقدر ترجعها (ما فيه معكوس)."}
+else{m.innerHTML="المساحة تتضاعف بمعامل <b>|det| = "+Math.abs(det).toFixed(2)+"</b>"+(det<0?" وانعكس توجيه الفضاء (det سالب)":"")+". كل عمود في المصفوفة هو صورة متجه أساس — وهذا كل سر «الدالة الخطية».";}
+}
+function pt(e){var r=svg.getBoundingClientRect();
+var x=((e.clientX-r.left)/r.width*380-CX)/U, y=(CY-(e.clientY-r.top)/r.height*260)/U;
+return [Math.max(-3.2,Math.min(3.2,Math.round(x*10)/10)), Math.max(-3.4,Math.min(3.4,Math.round(y*10)/10))];}
+var drag=null;
+function down(e,t){drag=t;e.preventDefault()}
+h1.addEventListener("pointerdown",function(e){down(e,1)});
+h2.addEventListener("pointerdown",function(e){down(e,2)});
+svg.addEventListener("pointermove",function(e){if(!drag)return;var p=pt(e);
+if(drag===1){mk.a=p[0];mk.c=p[1]}else{mk.b=p[0];mk.d=p[1]}upd()});
+window.addEventListener("pointerup",function(){drag=null});
+document.querySelectorAll("#mxt .ix-btn").forEach(function(btn){btn.onclick=function(){var p=btn.dataset.p.split(",");
+mk.a=+p[0];mk.b=+p[1];mk.c=+p[2];mk.d=+p[3];upd()}});
+upd();
+})();
+</script>
+
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
 
 def rot(t):
@@ -847,6 +928,7 @@ det(S) = 0.0 | rank(S) = 1 -&gt; S flattens the whole plane onto a line (informa
 <div class="tip"><b>الصلة بما بعدها:</b> كل طبقة في الشبكة العصبية = مصفوفة وزن (تحويل خطي) + دالة غير خطية. والتحويلات الخطية المتتالية بدون non-linearity تنهار لتحويل واحد (تركيب مصفوفات = مصفوفة). لهذا نحتاج التنشيط في المرحلة ٢.</div>
 
 <h3 class="sec-title">٠.٣ التفكيك SVD والرتبة المنخفضة</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">SVD مثل تلخيص كتاب ضخم: تطلع الفصول الرئيسية اللي تحمل أغلب المعنى، وترمي التفاصيل الدقيقة اللي ما تأثر. «رتبة منخفضة» معناها: البيانات اللي شكلها معقد ظاهريًا، حقيقتها تركيبة من مكونات قليلة — مثل صورة عالية الدقة تقدر تعرضها بشكل مقبول بجزء صغير من معلوماتها. هذا سر ضغط الصور وميزات التوصيات.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>أي مصفوفة M تتفكك إلى M = U Σ Vᵀ، حيث Σ قيم «مفردة» (singular values) مرتبة تنازليًا. وأفضل تقريب برتبة r (أي أقل خطأ ممكن) هو الاحتفاظ بأكبر r قيمة. هذي <b>نظرية Eckart–Young</b>، وخطؤها <b>يساوي بالضبط √(مجموع مربعات القيم المحذوفة)</b>. الفكرة وراء ضغط الصور، والـ LSA في المرحلة ٦، وLoRA في المرحلة ٤ (تغيير منخفض الرتبة).</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
@@ -1047,6 +1129,7 @@ L 392.58 89.74
 <p>بنيت مصفوفة ٦٠×٤٠ برتبة حقيقية ٣ مع ضوضاء صغيرة. القيم المفردة: ثلاث كبيرة (٥٨.٨ و٤٧.٨ و٤٤.٨) ثم قيم صغيرة (~٠.٦). الجدول يثبت النظرية: الخطأ الفعلي مطابق للصيغة في كل صف. وعند r=٣ سقط الخطأ من ٤٤.٩ إلى ٢.٣ وأنت تخزّن ٣٠٣ رقم بدل ٢٤٠٠ (١٢.٦٪). <b>الدرس:</b> الرتبة المنخفضة هي «بنية» تضغط فيها المعلومة، ولو البيانات (أو تغيّر الأوزان في fine-tuning) فيها بنية كذا، التقريب رخيص.</p>
 
 <h3 class="sec-title">٠.٤ المشتقات والتدرّج: كيف «نتعلّم»</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">أنت واقف على تلّ في الضباب وتبغى تنزل لأدنى نقطة. ما تشوف شي بعيد، لكن قدمك تحس <b>ميل الأرض تحتك</b> — هذا هو المشتق. تتحرك خطوة عكس الميل، ثم تحس من جديد، وهكذا. التعلّم في كل نماذج الذكاء الاصطناعي هو هذي الحركة بالضبط: المشتق يقول «وين ينخفض الخطأ»، والنموذج يتخطى خطوة بهذا الاتجاه ملايين المرات.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>المشتقة = ميل الدالة عند نقطة. لدالة متعددة المتغيّرات، <b>التدرّج (gradient)</b> هو متّجه المشتقات الجزئية، وله خاصية جوهرية: <b>يشير لاتجاه أسرع صعود</b>، فعكسه هو أسرع نزول. التعلّم كله (gradient descent) = خطوات صغيرة عكس التدرّج. وسلامة الخطوات تعتمد على حجمها: لدالة تربيعية، الخطوة المستقرة <b>lr &lt; 2/λ</b> حيث λ أكبر انحناء (أكبر قيمة ذاتية لمصفوفة هيسيان).</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
@@ -1428,6 +1511,7 @@ all three agree  : True</pre></div>
 <p>الثلاث طرق (الحل المغلق، والـ GD الذي كتبناه، وscikit-learn) أعطت نفس الأوزان (٠.٩٩٨٦، ١.٩٧٤٩، −٢.٩٤٠٣) بالقرب من الأوزان الحقيقية (١، ٢، −٣). هذا النمط (<b>تنفيذك مقابل مكتبة معيارية</b>) هو أرخص تحقّق ممكن، وبنستخدمه كثير.</p>
 
 <h3 class="sec-title">٠.٥ الاحتمالات: Bayes والاحتمال الشرطي</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">سمعت إن أحد زملائك جاي بالصدفة للمقهى اللي تروحه كل يوم. احتمال وجوده هناك أصلًا ضئيل — لكن لو عرفت إن اختبار اليوم قريب ومكان الدراسة الوحيد المفتوح هو نفس المقهى؟ تتغير تقديرك فورًا. <b>Bayes</b> هو هذي المهارة بشكل رقمي: معلومة جديدة تعدّل ظنّك القديم، مو تلغيه. و«الاحتمال الشرطي» يعني ببساطة: الاحتمال <b>بعد ما</b> نعرف معلومة إضافية.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>الاحتمال الشرطي P(A|B) مو P(B|A)، والخلط بينهما من أشهر أخطاء الاستدلال. قاعدة Bayes تربطهما: <b>P(A|B) = P(B|A)·P(A) / P(B)</b>. العنصر الذي يُنسى دايمًا هو <b>الاحتمال المسبق (base rate) P(A)</b>.</p>
 <div class="realworld"><div class="rw-head"><span class="rw-icon">🌍</span> مثال واقعي: مسألة فحص التصوير (Eddy ١٩٨٢)</div>
@@ -1587,6 +1671,7 @@ Q 333.53 89.31 316.83 109.40
 <div class="tip"><b>الصلة بما بعدها:</b> هذي نفس المشكلة في كشف الاحتيال وفي تقييم نماذج التصنيف (المرحلة ١: دقة ٩٧٪ بتصنيف «الكل سليم»)، وفي أي نظام ينتج «إنذارات» على حدث نادر.</div>
 
 <h3 class="sec-title">٠.٦ قانون الأعداد الكبيرة ونظرية الحد المركزي</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">ارمِ عملة ١٠ مرات — ممكن ٧ صور! ارمِها ١٠٠٠ مرة — بتقترب من النصف حتمًا. هذه ببساطة «قانون الأعداد الكبيرة»: الصدفة تلعب على المدى القصير وتستقر على المدى الطويل. أما «الحد المركزي» فهو المفاجأة الأجمل: متوسطات أي شيء عشوائي (طول، أخطاء قياس، أسعار) ترسم منحنى الجرس نفسه كل مرة. لهذا منحنى الجرس في كل مكان — ليس مؤامرة، بل رياضيات تجميع.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>(١) <b>قانون الأعداد الكبيرة:</b> متوسط العيّنة يقترب من المتوسط الحقيقي مع زيادة n. (٢) <b>نظرية الحد المركزي (CLT):</b> متوسط n عيّنة مستقلة، حتى من توزيع غير طبيعي، يقترب توزيعه من الطبيعي، بانحراف معياري σ/√n، ويصير <b>الالتواء</b> أقل بمعدّل 2/√n لو التوزيع الأصلي التواؤه 2 (مثل الأسّي). وهذا أساس فواصل الثقة والاختبارات الإحصائية (والـ bootstrap في المرحلة ٦).</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
@@ -2765,6 +2850,7 @@ L 519.06 159.93
 <div class="note"><b>حدّ في التجربة (صدق):</b> كنت قست «النسبة داخل ±١.٩٦σ» لكن لقيتها ٠.٩٤٧ حتى عند n=١ <b>بالصدفة</b> لخاصية الدالة الأسّية، فكانت توحي إن التوزيع طبيعي أصلًا. فاستبدلتها بالالتواء. <b>اختر المقياس الذي يكشف الظاهرة، مو الذي يخدعك.</b></div>
 
 <h3 class="sec-title">٠.٧ الأرجحية العظمى والإنتروبي: من أين جاء cross-entropy؟</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">أنت محقق وعندك مشاهدات الجريمة، وعندك قائمة «مشتبه بهم» (نماذج). تختار المشتبه اللي يجعل ما حدث <b>أقل مفاجأة</b>: لو فلان هو الفاعل، كل القرائن منطقية ومتوقعة. الإنتروبي هو قياس «المفاجأة» نفسها: شيء متوقع تمامًا مفاجأته صفر، ومفاجأة كاملة معلوماتها عالية. وcross-entropy في التدريب هو بالضبط: كم كانت مخرجات نموذجك «مفاجِئة» مقارنة بالحقيقة؟<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>عندك بيانات وتبي تختار معاملات النموذج. <b>الأرجحية العظمى (MLE):</b> اختر المعاملات التي تجعل البيانات المشاهَدة أكثر احتمالًا. وللـ log-likelihood: تعظيمه = تقليل <b>negative log-likelihood (NLL)</b>. والنتيجة الجميلة: NLL المتوسط على البيانات = <b>cross-entropy</b> بين التوزيع التجريبي للبيانات وتوزيع النموذج. والـ cross-entropy تتحلّل: <b>H(p,q) = H(p) + KL(p‖q)</b>، أي (إنتروبي البيانات: لا يمكن تخطّيه) + (فجوة النموذج: دايمًا ≥ ٠). فتقليل الـ loss = تقليل KL، وأدنى قيمة ممكنة هي الإنتروبي.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
@@ -2852,6 +2938,7 @@ print("uniform over 3 options: perplexity =", round(float(np.exp(-(np.ones(3) / 
 <section class="stage-section" id="p1"><div class="stage-hero blue" style=""><span class="big-num">١</span><div class="eyebrow">المرحلة ١ · تأسيس</div><h2>ML أساسي مضغوط</h2><div class="tools">أسبوعان</div><div class="read-time">جاهزة · أسبوعان</div></div><details class="en-box" open dir="ltr"><summary>English summary</summary><p class="en-text">A model is judged on data it has not seen. We verify numerically that expected test error equals bias² + variance + noise, that ridge regularization trades variance for bias, and that accuracy misleads on rare events (always predicting 'no' scores 97.1% when only 2.9% of cases are positive). The central lesson is leakage: selecting features before cross-validation gave 96% accuracy on pure noise, where the truth is 50%. A survey found leakage affecting 294 papers across 17 fields (Kapoor & Narayanan, 2023). Bagging trees cut test error to 38% of a single deep tree's error. We then measured how loud imputation leakage really is: mean-imputer leakage on the reported CV number was ≈0 (+0.0001), KNN-imputer leakage lowered it (−0.015), and wrong-way feature selection added +0.008 on real signal (the +0.46 explosion in 1.4 is a noise-labels phenomenon); a missingness indicator carried real signal (AUC 0.935→0.967), and cyclical month encoding beat raw month numbers (0.51 vs 0.64 log-loss).</p><div class="en-terms"><b>Key terms:</b> <span>generalization</span><span>bias–variance tradeoff</span><span>regularization</span><span>ROC-AUC</span><span>precision / recall</span><span>data leakage</span><span>cross-validation</span><span>bagging</span></div></details><div class="intro-box"><b>هدف المرحلة:</b> مو إنك تعرف كل خوارزمية، بل إنك تفهم <b>ليش يفشل التعلّم وكيف تعرف إنك خدعت نفسك</b>. هذا الجزء اللي ما يتقادم: النماذج تتغيّر، لكن التسرّب، والتحيّز والتباين، والتقييم الصادق، هي نفسها في الـ LLMs والـ agents (والحالات الواقعية بعد قليل تثبت كم الخطأ شائع). كل تجربة هنا مُنفّذة، وأكوادي (الانحدار، التصنيف، AUC، الأشجار) <b>تطابق scikit-learn</b> لمّا قارنتها.</div>
 
 <h3 class="sec-title">١.١ نظرية التعلّم: لماذا الدقّة على التدريب لا تكفي</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">طالب حفظ أجوبة الاختبارات القديمة حرفيًا. في الاختبار القديم نفسه؟ درجة كاملة. في اختبار جديد بأستاذ مختلف؟ ينهار. النموذج اللي «يحفظ» بيانات التدريب بدل ما «يفهم» القاعدة اللي وراءها هو نفس الطالب بالضبط — يسمى overfitting. ليه نستخدم بيانات <b>ما شافها النموذج أبدًا</b> في الاختبار: لأنها الاختبار «الجديد» اللي يكشف الحفظ من الفهم.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>التعلّم الإشرافي يقلّل الخطأ على بيانات التدريب (<b>empirical risk</b>)، لكن هدفك الحقيقي الخطأ على بيانات لم يرها النموذج (<b>generalization error</b>). والفجوة بينهما هي الخطر. ولخطأ المربعات هناك تحليل دقيق:</p>
 <div class="formula">E[(ŷ − y)²] = Bias² + Variance + σ²<span class="fl">التحيّز²: خطأ منهجي من افتراضات النموذج · التباين: حساسية النموذج لعيّنة التدريب · σ²: ضوضاء لا تُلغى</span></div>
@@ -3106,6 +3193,7 @@ z
 <div class="note"><b>تنبيه منهجي (صدق):</b> أول محاولة لي استخدمت نقاط تدريب <b>عشوائية</b> فانفجرت الأخطاء للدرجات العالية (أرقام بالملايين) بسبب ذيل ثقيل (فجوات في الـ x تعطي منحنيات جامحة تسيطر على المتوسط). التحليل الكلاسيكي يثبّت التصميم (fixed design)، وهذا ما فعلناه. <b>نتائج المتوسطات قد تضلّل لو التوزيع ثقيل الذيل.</b></div>
 
 <h3 class="sec-title">١.٢ التنظيم (Regularization): نقايض تحيّزًا بتباين</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">التنظيم مثل قواعد تدريب رياضي تمنع اللاعب من «الضخ الزائد» على حساب اللياقة العامة: تقيد الحرية شوي عشان الأداء يظل صالحًا للمباريات الجاية مو للمباراة اللي تمرن عليها فقط. الفكرة الكبيرة: نموذج مرن جدًا يلصق نفسه بالتدريب (تباين عالٍ)، ونموذج مقيد جدًا يفوّت النمط (تحيّز عالٍ) — والتنظيم هو ميزان الحرية هذا.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>بدل ما نقيّد درجة النموذج، نعاقب حجم الأوزان: <b>Ridge</b> يقلّل (الخطأ + λ‖w‖²) وله حل مغلق <b>w = (XᵀX + λI)⁻¹Xᵀy</b>. λ كبير = أوزان أصغر = تباين أقل وتحيّز أكبر. وفي المنظور الاحتمالي: ridge = MLE مع توزيع مسبق طبيعي على الأوزان (MAP).</p>
 <div class="ixw" id="bvw">
@@ -3456,8 +3544,87 @@ L 504.77 171.10
 <div class="tip"><b>مقارنة مهمة للمرحلة ٢:</b> هنا L2 ساعد النموذج الخطي بوضوح. لكن في الشبكة العصبية الصغيرة (المرحلة ٢، درس ٢.٥، ٨ تشغيلات مزدوجة) لم نجد دليلًا على فائدة weight decay وأضرّ dropout، وكان مكسب الـ early stopping متواضعًا ومتفاوتًا. <b>فائدة التنظيم تعتمد على النموذج والبيانات، فلا تفترضها واقسها.</b></div>
 
 <h3 class="sec-title">١.٣ التصنيف والمقاييس: لماذا الدقّة مخادعة</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">جهاز كشف دخان «مخادع» يطبع دايمًا «ما فيه حريق». في ٩٩٪ من الأيام؟ صحيح! لأن الحرائق نادرة أصلًا. لكن أول حريق حقيقي؟ يحترق البيت والدقة «العالية» ما نفعت. لما الفئات غير متوازنة (احتيال، مرض، حريق) الدقة وحدها تخفي كل شيء — لهذا نستخدم precision (لما أزعّر، أصح؟) وrecall (من الحالات الحقيقية، كم لقطت؟).<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>الانحدار اللوجستي يمثّل P(y=1|x) = σ(wᵀx) ويقلّل log-loss (وهو cross-entropy من المرحلة ٠). لا حل مغلق، فنحلّه بـ gradient descent. والمقاييس تُبنى من مصفوفة الالتباس: <b>precision</b> = كم من الإيجابيات المتوقّعة حقيقية، <b>recall</b> = كم من الإيجابيات الحقيقية لقطنا. و<b>ROC-AUC</b> له تفسير احتمالي أنيق: <b>احتمال أن درجة إيجابي عشوائي أعلى من درجة سلبي عشوائي</b>، ولهذا لا يتأثر بأي تحويل رتيب للدرجات، ولا يعتمد على عتبة.</p>
+
+<div class="ixw" id="cmx">
+<div class="ix-head"><span class="ix-badge">🧪 جرّب بنفسك</span><b>العتبة تصنع المقاييس: اسحب وحشوف مصفوفة الالتباس والدقة والاستدعاء تتغير (١.٣ ↔ ٥.٠)</b></div>
+<div class="ix-controls"><label>عتبة القرار t = <output id="cmx-t">0.50</output></label>
+<input type="range" id="cmx-sl" min="-30" max="45" value="5">
+<span class="ix-note" id="cmx-read" style="margin:0;flex:1 1 100%;direction:rtl"></span></div>
+<svg id="cmx-svg" viewBox="0 0 380 150"></svg>
+<table class="cmx-table" style="width:100%;border-collapse:collapse;margin:8px 0;font-size:13px;text-align:center">
+<tr><td id="cmx-tp" class="cmx-cell" style="background:rgba(45,122,96,0.18)"></td><td id="cmx-fp" class="cmx-cell" style="background:rgba(224,120,86,0.18)"></td></tr>
+<tr><td id="cmx-fn" class="cmx-cell" style="background:rgba(224,120,86,0.18)"></td><td id="cmx-tn" class="cmx-cell" style="background:rgba(45,122,96,0.18)"></td></tr>
+</table>
+<svg id="cmx-roc" viewBox="0 0 380 110"></svg>
+<div class="ix-note">كل عمود في الرسم = سلة درجات. المنطقة الخضراء = درجات الفئة السالبة (أغلبية) والبرتقالية = الإيجابية. الخط الذهبي = عتبة القرار: كل ما يمينه نعلنه «إيجابي». لاحظ المفارقة: لو اخترت عتبة تقول دائمًا «سلبي» تنج الدقة ≈ ٨٨٪ وأنت لم تلتقط إيجابيًا واحدًا — ولهذا نقرأ precision/recall معًا (وهذا مربط الفرس في ٥.٠: المقاييس تُختار من السؤال، مو من العُرف). على منحنى ROC: النقطة الذهبية تتحرك مع العتبة، والقيم المتطرفة (t منخفضة جدًا = كل شيء إيجابي → TPR=1 وFPR=1).</div>
+</div>
+<script>
+(function(){
+var NS="http://www.w3.org/2000/svg";
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+var rnd=mulberry32(7);
+function gauss(){var u=0,v=0;while(u===0)u=rnd();while(v===0)v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+var NEG=[],POS=[];
+for(var i=0;i<2600;i++)NEG.push(gauss()*1.0);
+for(var j=0;j<360;j++)POS.push(gauss()*1.0+1.6);
+var LO=-3.5,HI=4.5,BW=0.25,NB=Math.round((HI-LO)/BW);
+function binIdx(s){return Math.max(0,Math.min(NB-1,Math.floor((s-LO)/BW)))}
+var hn=[],hp=[],mx=1;
+for(var b=0;b<NB;b++){hn[b]=0;hp[b]=0}
+NEG.forEach(function(s){hn[binIdx(s)]++});POS.forEach(function(s){hp[binIdx(s)]++});
+hn.concat(hp).forEach(function(v){if(v>mx)mx=v});
+var svg=document.getElementById("cmx-svg"),roc=document.getElementById("cmx-roc");
+function el(p,n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e}
+var W=380,H=150;
+function xOf(s){return (s-LO)/(HI-LO)*W}
+function yOf(c){return H-6-(c/mx)*(H-24)}
+for(var b2=0;b2<NB;b2++){
+ var x=b2*BW/NB*W*(NB*BW/(HI-LO));x=xOf(LO+b2*BW);
+ var wn=hn[b2],wp=hp[b2];
+ if(wn)el(svg,"rect",{x:x+0.5,width:W/NB-1.5,y:yOf(wn),height:H-6-yOf(wn),fill:"#9db0a8","fill-opacity":0.55});
+ if(wp)el(svg,"rect",{x:x+0.5,width:W/NB-1.5,y:yOf(wp),height:H-6-yOf(wp),fill:"#E07856","fill-opacity":0.75});
+}
+var thr=el(svg,"line",{x1:190,y1:4,x2:190,y2:H-6,stroke:"#D9A86C","stroke-width":2.5,"stroke-dasharray":"6 4"});
+var thrLbl=el(svg,"text",{x:190,y:12,"text-anchor":"middle","font-size":10,fill:"#b5812f","font-weight":700});
+el(svg,"text",{x:6,y:14,"font-size":10,fill:"#9db0a8"}).textContent="سلبي";
+el(svg,"text",{x:W-6,y:14,"font-size":10,fill:"#E07856","text-anchor":"end"}).textContent="إيجابي";
+el(roc,"line",{x1:30,y1:95,x2:370,y2:95,stroke:"#c9d8d1"});
+el(roc,"line",{x1:30,y1:95,x2:30,y2:5,stroke:"#c9d8d1"});
+el(roc,"text",{x:200,y:106,"font-size":9,fill:"#888","text-anchor":"middle"}).textContent="FPR";
+el(roc,"text",{x:16,y:50,"font-size":9,fill:"#888","text-anchor":"middle",transform:"rotate(-90 16 50)"}).textContent="TPR";
+var pts=[];
+for(var k=0;k<=80;k++){var tt=HI-k/80*(HI-LO);pts.push([tt,tprFpr(tt)])}
+var path="";
+pts.forEach(function(p2,i2){var X=30+p2[1][1]*340,Y=95-p2[1][0]*90;path+=(i2?"L":"M")+X+" "+Y+" "});
+el(roc,"path",{d:path,fill:"none",stroke:"#2d7a60","stroke-width":1.5});
+var dot=el(roc,"circle",{r:5,fill:"#D9A86C",stroke:"#fff","stroke-width":1.5});
+function counts(t){var tp=0,fn=0,fp=0,tn=0;
+POS.forEach(function(s){s>=t?tp++:fn++});NEG.forEach(function(s){s>=t?fp++:tn++});return[tp,fp,fn,tn]}
+function tprFpr(t){var c=counts(t);var tpr=c[0]/(c[0]+c[2]),fpr=c[1]/(c[1]+c[3]);return[tpr,fpr]}
+var sl=document.getElementById("cmx-sl");
+function upd(){
+var t=sl.value/10;
+document.getElementById("cmx-t").textContent=t.toFixed(1);
+thr.setAttribute("x1",xOf(t));thr.setAttribute("x2",xOf(t));thrLbl.setAttribute("x",xOf(t));thrLbl.textContent="t="+t.toFixed(1);
+var c=counts(t),tp=c[0],fp=c[1],fn=c[2],tn=c[3],n=tp+fp+fn+tn;
+var pr=tp+fp?tp/(tp+fp):0, rc=tp+fn?tp/(tp+fn):0, ac=(tp+tn)/n;
+var f1=pr+rc?2*pr*rc/(pr+rc):0;
+document.getElementById("cmx-tp").innerHTML="<b>TP = "+tp+"</b><br><small>إيجابي صحيح</small>";
+document.getElementById("cmx-fp").innerHTML="<b>FP = "+fp+"</b><br><small>إنذار كاذب</small>";
+document.getElementById("cmx-fn").innerHTML="<b>FN = "+fn+"</b><br><small>فوّتناه</small>";
+document.getElementById("cmx-tn").innerHTML="<b>TN = "+tn+"</b><br><small>سلبي صحيح</small>";
+document.getElementById("cmx-read").innerHTML="الدقة (accuracy) = <b>"+(ac*100).toFixed(1)+"٪</b> · precision = <b>"+(pr*100).toFixed(1)+"٪</b> · recall = <b>"+(rc*100).toFixed(1)+"٪</b> · F1 = <b>"+f1.toFixed(2)+"</b> · (مقارنةً بـ «قل دائمًا سلبي»: دقة "+((tn+fn)/n*100).toFixed(1)+"٪ وrecall صفر)";
+var tf=tprFpr(t);
+dot.setAttribute("cx",30+tf[1]*340);dot.setAttribute("cy",95-tf[0]*90);
+}
+sl.oninput=upd;upd();
+})();
+</script>
+<style>.cmx-cell{padding:8px 6px;border:1px solid var(--border);border-radius:8px;line-height:1.5}</style>
+
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
@@ -4347,6 +4514,7 @@ L 504.77 180.89
 <div class="tip"><b>الصلة بالمرحلة ٠:</b> precision هنا هي P(حقيقي | إنذار)، وهي نفس مشكلة Eddy: كل ما قلّ الانتشار صعب تحافظ على precision عالية.</div>
 
 <h3 class="sec-title">١.٤ التقييم الصادق والتسرّب: أخطر خطأ</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">تخيّل تنبّأ بحرارة الغد وأنت داخل جيبك ترمومتر الغد نفسه — ستحقق دقة خارقة وأنت ما تنبأت بشي. التسرّب (leakage) هو أي معلومة من «المستقبل» تسربت لبيانات تدريبك: عمود ياريخ الدفع في نموذج كشف الاحتيال، أو إحصائية محسوبة من كل البيانات قبل تقسيمها. النتيجة درجات وهمية تنهار أول ما تواجه الواقع — وهو أشيع سبب لمشاريع تفشل بعد النجاح «المذهل» في المختبر.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p><b>التسرّب (leakage)</b>: أي معلومة من بيانات الاختبار تدخل في التدريب، مباشرة أو غير مباشرة. وأشهر أشكاله: (١) اختيار الخصائص أو المعالجة المسبقة على <b>كل</b> البيانات قبل التقسيم، (٢) تكرار الصفوف أو الأفراد (non-independence) بين التدريب والاختبار، (٣) تسرّب زمني (تدريب على المستقبل). القاعدة: <b>كل خطوة تتعلّم من البيانات (اختيار خصائص، scaling، imputation) لازم تُدرَّب داخل كل fold فقط</b>. كتاب ESL يسمّي الخطأ الأول «الطريقة الخاطئة للتحقق المتقاطع».</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
@@ -4501,6 +4669,7 @@ L 504.77 176.25
 <p>مراجعة منهجية في <i>Nature Machine Intelligence</i> فحصت نماذج التعلّم الآلي لتشخيص COVID-19 من الأشعة السينية والمقطعية، المنشورة بين يناير وأكتوبر ٢٠٢٠: حدّدت <b>٢٬٢١٢</b> دراسة، دخل <b>٤١٥</b> بعد الفرز الأولي، و<b>٦٢</b> بعد فحص الجودة. والنتيجة: <b>لا واحد منها صالح للاستخدام السريري المحتمل</b> بسبب عيوب منهجية و/أو تحيّزات (وذكرت تغطية صحفية للدراسة أن ٤٥ من الـ٦٢ كان خطر التحيّز فيها عاليًا). والمؤلفون وضعوا توصيات في خمس مجالات منها البيانات والتقييم وإمكانية إعادة الإنتاج. <b>الدرس:</b> الحماس والإلحاح لا يعوّضان صرامة التقييم.</p></div>
 
 <h3 class="sec-title">١.٥ التحقق المتقاطع: وحتى هو فيه ضجيج</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">بدل ما تعطي المختبر سؤالًا واحدًا وتقوم تقيسه، دوّر الأسئلة عليه: كل مرة جزء مختلف من البيانات يكون هو «الاختبار» والباقي تدريب، ثم تجمع الدرجات. بهذا ما تكون الدقيقة انطلاق حظ واحد، وتشوف ثبات مستوى النموذج. لكن حتى هذي الطريقة لها ضجيج — خمس نتائج خمس عينات، والفروق الصغيرة بينها ما تنحكم عليها بجدية (هذا درس ٥.٣).<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p><b>النظرية:</b> تقسيم واحد للتدريب/الاختبار يعطي تقديرًا مشوّشًا. الـ k-fold يعطي k تقديرات ويأخذ متوسطها. لكن المتوسط نفسه متغيّر لأنه يعتمد على كيف قسّمت.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
 from sklearn.linear_model import LogisticRegression
@@ -4821,6 +4990,7 @@ for B in [1, 5, 25, 100]:
 <section class="stage-section" id="p2"><div class="stage-hero blue" style=""><span class="big-num">٢</span><div class="eyebrow">المرحلة ٢ · تأسيس</div><h2>التعلّم العميق</h2><div class="tools">٣ أسابيع</div><div class="read-time">جاهزة · ٣ أسابيع</div></div><details class="en-box" open dir="ltr"><summary>English summary</summary><p class="en-text">Deep learning from the inside. Backpropagation is the chain rule applied to a computational graph; a 60-line autograd matches finite differences to about 1e-11. One hidden layer with a non-linearity solves XOR, where a linear model scores 49%. Initialization follows from variance propagation: Var(w) = 1/n (Xavier) or 2/n (He, for ReLU); poor scales make activations vanish or explode, and a deep sigmoid network's gradient falls to 5e-25 at depth 40. Plain gradient descent on a quadratic is stable only if the learning rate is below 2/λmax, confirmed exactly. In our overfitting experiment (8 paired runs per setting) dropout hurt, weight decay showed no detectable benefit, and early stopping gained only +0.017 on average, partly from one bad run: regularization must be measured, and a 3-run average can mislead. We then add two MLOps habits: hand-rolled LR schedules on the ill-conditioned bowl (constant 0.019 converged in 426 steps; step decay never fired before convergence and cosine took 433 - schedules are not magic, measure them), and a 30-line JSONL experiment tracker implementing the run/config/metric/query concepts behind W&B and MLflow, built before use.</p><div class="en-terms"><b>Key terms:</b> <span>backpropagation</span><span>autograd</span><span>activation function</span><span>vanishing gradient</span><span>Xavier / He initialization</span><span>Adam</span><span>early stopping</span><span>dropout</span></div></details><div class="intro-box"><b>هدف المرحلة:</b> تبني التعلّم العميق <b>من الداخل</b> بحيث لمّا تستخدم PyTorch لاحقًا تكون عارف وش يصير تحت كل سطر. كل قطعة نظرية (الـ chain rule، تباين التفعيلات، حد استقرار lr) <b>تتحقق منها عدديًا</b>: backprop مقابل الفروق المنتهية (فرق ~١٠⁻¹¹)، وحد lr=٢/λ يتأكد بالتباعد عند تجاوزه بالضبط. ولا أدّعي نتيجة وما أنفّذها: حتى النتيجة المخالفة للمألوف (التنظيم ما أفاد في درس ٢.٥) بيّنتها وفحصت أنها مو خطأ كود، <b>وصحّحت استنتاجي بنفسي</b> لمّا كرّرت التجربة على ٨ تشغيلات بدل ٣ (التفصيل في ٢.٥).</div>
 
 <h3 class="sec-title">٢.١ الانتشار العكسي: قاعدة السلسلة على رسم حسابي</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">فريق شغّل مشروع فشل. المدير يوزّع «اللوم» على كل شخص بقدر مساهمته في الخطأ — وكل واحد يعدّل سلوكه بنسبته. في الشبكة العصبية: الخرج غلط بمقدار معيّن، والانتشار العكسي يمرر هذا الغلط للخلف عبر كل من ساهم فيه (الأوزان)، كل وزن ياخذ «حصته من اللوم» (التدرّج) ويتحرك قليلًا عكسه. مليارات التعديلات الصغيرة هذي هي التعلّم نفسه.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>أي حساب في الشبكة هو <b>رسم حسابي</b> (computational graph): عُقد تحسب دوال بسيطة. لو y = f(g(x)) فالمشتقة dy/dx = f′(g(x))·g′(x). <b>Backpropagation هو تطبيق منظّم لقاعدة السلسلة</b> من المخرج إلى المدخلات: كل عقدة تستقبل «الأثر على الـ loss» (grad) من العقد اللاحقة وتوزّعه على مدخلاتها بضربه في مشتقتها المحلية. وإذا استخدمت قيمة في أكثر من مكان فتدرّجها <b>مجموع</b> المسارات (مثل y = x·x + x → dy/dx = 2x+1). نبنيها كاملة في ٦٠ سطر (على نسق micrograd لـ Karpathy):</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import math
@@ -5043,6 +5213,7 @@ reset();
 </script>
 
 <h3 class="sec-title">٢.٢ الشبكة متعددة الطبقات: لماذا تحتاج طبقة مخفية؟</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">عندك غرفتان وفصل بينهما خط مستقيم مرسول على الأرض — تقدر تفصل أي مجموعتين ما دام الخط المستقيم يكفي. لكن بعض التقسيمات (مثل لعبة XOR) أي خط مستقيم يفشل. الحيلة: حوّل الغرفة أولًا — لو رفعت واحدًا من الطرفين لطابق ثانٍ، الفصل يصير سهل. الطبقة المخفية هي بالضبط «إعادة ترتيب الفضاء» قبل الفصل، ولهذا شبكة بطبقة مخفية كافية لتمثيل أي دالة (نظرية التقريب العام).<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>نموذج خطي (أو لوجستي) يرسم حدًا فاصلًا مستقيمًا. مسألة <b>XOR</b> (التصنيف حسب إشارة x·y) <b>غير قابلة للفصل خطيًا</b>: لا مستقيم يفصلها. هذا ما أثبته Minsky وPapert (١٩٦٩) لـ perceptron أحادي الطبقة. طبقة مخفية بتنشيط غير خطي تحوّل الفضاء لتصير الفئات قابلة للفصل. و<b>نظرية التقريب العام</b> (Cybenko ١٩٨٩، Hornik ١٩٩١): شبكة بطبقة مخفية واحدة وعدد كافٍ من الوحدات تقرّب أي دالة مستمرة على مجال مغلق. <b>لاحظ حدّها:</b> تضمن وجود تمثيل، لا تضمن إنك تلقاه بالتدريب ولا إنه يعمّم، ولا كم وحدة تحتاج.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
@@ -5168,6 +5339,7 @@ L 467.78 214.06
 <p>والتمرين ٣ يوضّح أثر عدد الوحدات: ١ وحدة = ٠.٦٥٩، ٢ = ٠.٨٢٨، ٤ = ٠.٩٤٤، ثم ٨ و١٦ ≈ ٠.٩٥ (سقف).</p>
 
 <h3 class="sec-title">٢.٣ التهيئة والتدرّجات المتلاشية: لماذا العمق صعب</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">همسة تنتقل عبر صف من ٥٠ شخصًا: كل واحد يعيدها أخف من سابقه حتى تختفي تمامًا بعد العشرين. الإشارة في شبكة عميقة تعاني نفس الشي: التدرّجات تضمحل طبقة بعد طبقة فالطبقات الأولى «ما تسمع» خطأً يتعلمون منه (أو تنفجر إن كانت الأوزان كبيرة). التهيئة الذكية (وأفكار مثل الوصلات المتخطية (skip connections)) هي هندسة «حفظ مستوى الصوت» عبر الصف.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية (اشتقاق قصير)</h4>
 <p>طبقة z = Σᵢ wᵢxᵢ بـ n مدخل: لو الأوزان مستقلة بتباين Var(w) والمدخلات بمتوسط صفر، فتباين المخرج: <b>Var(z) = n · Var(w) · E[x²]</b>. لو أردنا الحفاظ على التباين عبر الطبقات نحتاج n·Var(w) ≈ 1، يعني <b>Var(w) = 1/n</b> (<b>Xavier/Glorot</b>، لتنشيط خطي أو tanh قرب الصفر). وReLU تصفّر نصف القيم فتنقص E[x²] للنصف، فنحتاج <b>Var(w) = 2/n</b> (<b>He</b>). والمشكلة الثانية: مشتقة sigmoid ≤ ٠.٢٥، فعبر L طبقات يمكن أن يتقلّص التدرّج بعامل ٠.٢٥<sup>L</sup>.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
@@ -5570,6 +5742,7 @@ L 432.65 118.43
 <p>التحليل أعلاه هو جوهر ورقة Glorot وBengio (AISTATS ٢٠١٠) التي حلّلت تباين التفعيلات والتدرّجات واقترحت تهيئة تحافظ عليه، وورقة He وآخرين (٢٠١٥) التي اشتقّت التهيئة المناسبة لـ ReLU. (المراجع في آخر المرحلة؛ الأكواد هنا تحقّقت عدديًا من الاشتقاقات نفسها.)</p></div>
 
 <h3 class="sec-title">٢.٤ المُحسّنات: من SGD إلى Adam، بالنظرية والأرقام</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">SGD سائر في ضباب يحس الأرض تحت قدميه فقط: بطيء الثبات، يتذبذب في الوديان. Momentum يعطيه «قوة دفع» تكسر التذبذب وتمر بالمنحدرات الصغيرة. Adam يضيف ذاكرة ذكية: لكل معامل يتعلم «خطوته الخاصة» بحسب حجم تدرّجاته الأخيرة — كبيرة حيث المنحدر مستقر وصغيرة حيث المنحدر عصبي. النتيجة: نفس الوجهة، وصول أسرع وأثبت.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>لدالة تربيعية f = ½·Σ λᵢ·wᵢ² (انحناءات λᵢ)، التحديث w ← w − lr·λ·w يضرب كل مركّبة في (١ − lr·λ). التقارب يتطلب |١ − lr·λ| &lt; ١ لكل λ، أي <b>lr &lt; ٢/λmax</b>. لكن سرعة التقارب تحدّدها أصغر مركّبة (تقارب ببطء ما دام lr مضبوط على الأكبر): النسبة <b>κ = λmax/λmin</b> (رقم الشرط) هي المشكلة. <b>Momentum</b> يتراكم فيه التدرّج فيعدّي الوديان الضيقة، و<b>Adam</b> يعدّل الخطوة لكل معامل بمتوسط متحرك للتدرّج (m) ولمربعه (v) مع تصحيح الانحياز في البداية.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
@@ -6324,6 +6497,7 @@ L 340.26 69.24
 </ul>
 
 <h3 class="sec-title">٢.٥ التعميم في الشبكات: early stopping وweight decay وdropout</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">عضلات بلا راحة = إصابة؛ التدريب الزائد على بيانات التدريب = overfitting. الحلول الثلاثة أشكال «نظام تدريب ذكي»: early stopping توقف التمرين أول ما تبدأ الأداء بالانحدار (تراقب مجموعة تحقق منفصلة)، وweight decay عقوبة على الأوزان الضخمة كي يظل النموذج «بسيطًا ما أمكن»، وdropout يمرّن الشبكة وهي «ناقصة عمال» عشان ما تعتمد على عامل واحد — كلها تدفع النموذج نحو قواعد عامة بدل حفظ تفاصيل التدريب.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>الشبكة الكبيرة على بيانات قليلة تحفظ الضوضاء: خطأ التدريب → ٠ وخطأ التحقق يرتفع. أدوات الكبح: (١) <b>Early stopping</b>: أوقف عند أدنى خطأ تحقق (يحدّ من «كم تعلّمت من الضوضاء»). (٢) <b>Weight decay</b> (L2): عقوبة على حجم الأوزان. (٣) <b>Dropout</b>: تعطيل وحدات عشوائيًا أثناء التدريب (مع إعادة المعايرة) فيمنع الاعتماد على وحدات معيّنة.</p>
 <div class="ixw" id="gdw">
@@ -8050,9 +8224,11 @@ for hidden in [1, 2, 4, 8, 16]:
 <div class="note"><b>لماذا الوصفة بهالترتيب؟</b> Karpathy يلخّص السبب: تدريب الشبكات «يفشل بصمت» (fails silently) و«نهج سريع ومتهوّر» لا يشتغل وينتهي بمعاناة. فالخطوات تبدأ بأقل شي يمكن أن يخطئ فيه الإنسان (البيانات والمقياس) قبل النموذج. وGoogle تقول بنفس الروح: افعل ML «كمهندس ممتاز، مو كخبير ML ممتاز».</div>
 
 <h3 class="sec-title">الخطوة ٠-١: هل تحتاج ML؟ وكيف تقيس النجاح؟</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">بعض المشاكل مطرقة تبحث عن مسمار: لو القاعدة اليدوية أو جدول Excel يحلها بدقيقة، فالتعلم الآلي تكلفة بلا مردود. التعلم الآلي يستحق عندما القاعدة <b>تتغير</b> أو <b>أكبر من أن تكتب يدويًا</b> (فهم نص، تمييز صورة) أو <b>تتحسن مع البيانات</b>. وقرار «كيف أقيس النجاح» يجب أن يسبق أي سطر كود — لأن ما لا تقيسه لن تتحسن نحوه.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p><b>Rule #1</b> من Google: «لا تخف من إطلاق منتج بدون تعلّم آلي»، لأن ML يحتاج بيانات، والـ heuristic البسيط يوصلك لنصف الطريق بسرعة. و<b>Rule #2</b>: صمّم المقاييس وطبّقها <b>قبل</b> النموذج. في مثالنا: عميل يترك الخدمة (churn). القرار العملي: نرسل <b>عرض احتفاظ</b> لمن نتوقّع مغادرته. فالمقياس الحقيقي <b>تكلفة الخطأ</b>، مو الدقّة: تفويت عميل مغادر (FN) أغلى بكثير من إرسال عرض زائد (FP). سنفترض (أرقام افتراضية صراحة): تفويت العميل يكلّف ٥٠ والعرض ٥.</p>
 
 <h3 class="sec-title">الخطوة ٢: افهم البيانات (قبل أي نموذج)</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">قبل تسافر بلد جديد تقرأ عنها: وين تنزل، وش تحذر منه، كم العملة. قبل أي نموذج: اعرف بياناتك بنفس الروح — من أين جاءت؟ كم صف مكرر أو فارغ؟ هل الفئات متوازنة؟ فيه أعمدة «بريئة الشكل» تخفي المستقبل؟ ساعة واحدة هنا توفر أسابيع من تشخيص لماذا «النموذج غبي» — والغالب أن المشكلة في البيانات لا في النموذج.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>Karpathy يبدأ بـ«لا تلمس أي كود شبكة، ابدأ بفحص بياناتك بدقّة»، ويبحث عن التكرارات وعدم التوازن والشواذ لأنها «تكشف أخطاء في جودة البيانات أو المعالجة». جرّب:</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
 import pandas as pd
@@ -8231,6 +8407,7 @@ z
 <p><b>قراءة صادقة:</b> فرق الـ AUC <b>صغير</b> (٠.٧٣٣ مقابل ٠.٧٢٦): التقسيم العشوائي ما خدعنا كثيرًا هنا، وأي أحد يدّعي العكس من هذي التجربة يبالغ. لكن لاحظ <b>ما تحت المقياس</b>: معامل support_calls نزل من ٠.٣٤٠ إلى ٠.١٣٥، وmonthly_charge ارتفع من ٠.٢٤٦ إلى ٠.٧٦١. <b>العلاقة نفسها تحرّكت (drift)</b> والمقياس الكلي بالكاد تحرّك. الدرس: AUC واحد لا يكفي لاكتشاف الانحراف، تحتاج مراقبة للعلاقات والتوزيعات (المرحلة ١٠). (وهذا الانحراف زرعته أنا؛ شفناه لأننا فتّشنا عنه.)</p>
 
 <h3 class="sec-title">الخطوة ٤: baselines غبية، ثم نموذج بسيط</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">قبل تفتخر بسرعتك، اقس سرعتك وأنت تمشي. النموذج الغبي (توقع الأكثر شيوعًا دائمًا) هو خط المشي: أي نموذج «ذكي» لازم يغلبه بوضوح وإلا فهو زينة بلا قيمة. ثم نموذج بسيط مفهوم (شجرة صغيرة، انحدار خطي) يعطيك أرضية ثانية وتفسيرًا. فقط بعدها استحق النموذج الكبير أن يستهلك وقتك وذاكرتك.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>Karpathy: «أنشئ الهيكل end-to-end مع baselines غبية» ثم «عقّد شيئًا واحدًا كل مرة». وGoogle (Rule #4): ابدأ بنموذج بسيط وأصلح البنية. سلّم النماذج على بيانات التحقق:</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre><span class="c"># يعتمد على الكود السابق في نفس الدرس (انسخه أول)</span>
 from sklearn.dummy import DummyClassifier
@@ -8261,6 +8438,7 @@ model                                     ROC-AUC   PR-AUC
 <div class="pitfall"><b>لا تعمّم من هذا:</b> boosting ما تفوّق هنا لأن <b>بياناتي مولَّدة من نموذج لوجستي</b>، فالنموذج الأبسط هو الصحيح بالتعريف. في بيانات حقيقية غالبًا تتغيّر النتيجة. القاعدة: <b>قِس ولا تفترض</b>. وللشبكات العصبية: Karpathy ينصح بأن <b>تجعل النموذج يحفظ دفعة واحدة صغيرة (overfit a single batch)</b> قبل أي شي، فلو ما قدر، فيه خطأ في الكود (المرحلة ٢).</div>
 
 <h3 class="sec-title">الخطوة ٥: تحليل الأخطاء بالشرائح</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">طالب رجعت ورقته: لا ينظر للدرجة ويحزن — يفلت الأخطاء ويجمعها: خمس أخطاء من نوع واحد؟ هذا أولوية المراجعة. تحليل الأخطاء نفس الشي: افصل أخطاء النموذج حسب الشرائح (فئة، طول نص، مصدر بيانات) وشنّع على الشريحة الأثقل. غالبًا تحسّن شريحة واحدة يحرك المقاس العام أكثر من تدريب نموذج أضخم.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>رقم واحد يخفي الأماكن الضعيفة. قسّم الأداء حسب الشرائح:</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre><span class="c"># يعتمد على الكود السابق في نفس الدرس (انسخه أول)</span>
 df = make_customers()
@@ -8374,6 +8552,7 @@ note: dropping noisy data is a decision, not a free fix: first find out WHY the 
 <p>(هذا تمرين ٢ منفَّذًا هنا لأنه يكمل الفكرة، وهذا مخرجه الفعلي: درّبنا مع south وبدونها، والنتيجة <b>٠.٧٤٠ مقابل ٠.٧٣٩</b> على بيانات نظيفة: حذف المنطقة ما حسّن شي. <b>حذف البيانات «السيئة» قرار مو إصلاحًا مجانيًا؛</b> اعرف أولًا لماذا تسمياتها خاطئة.)</p>
 
 <h3 class="sec-title">الخطوة ٦: المعايرة (Calibration)</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">خبير يقول «أنا متأكد ٩٠٪» ويصيب ٩ مرات من ١٠ — هذا معايَر. خبير يقول «٩٠٪» ويصيب ٦٠٪ — واثق زيادة عن اللزوم. النماذج غالبًا واثقة أكثر مما تستحق، والمعايرة عملية «ضبط شارة الثقة» لتطابق الواقع. بدونها كل قراراتك المبنية على العتبات (أراجع هذه الحالة تلقائيًا؟) مبنية على وهم دقة.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>لو ستستخدم الاحتمال في قرار تكلفة (الخطوة ٧)، لازم «٣٠٪» تعني أن ٣٠٪ من هذي الحالات تغادر فعلًا. نقيس: متوسط الاحتمال المتوقّع مقابل المشاهَد لكل خُمس من الدرجات، ودرجة <b>Brier</b> (متوسط مربع الفرق بين الاحتمال والنتيجة):</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre><span class="c"># يعتمد على الكود السابق في نفس الدرس (انسخه أول)</span>
 from sklearn.calibration import CalibratedClassifierCV
@@ -8734,6 +8913,7 @@ for c_fn in [1, 3, 10, 50, 200]:
 <section class="stage-section" id="p3"><div class="stage-hero " style=""><span class="big-num">٣</span><div class="eyebrow">المرحلة ٣ · المحرّك</div><h2>Transformers من الصفر</h2><div class="tools">٣ أسابيع</div><div class="read-time">جاهزة · ٣ أسابيع</div></div><details class="en-box" open dir="ltr"><summary>English summary</summary><p class="en-text">Build the Transformer in NumPy: BPE tokenization, embeddings, scaled dot-product attention (divided by √d because the variance of a dot product grows with d), causal masking, multi-head attention, positional encoding and a complete block (about 12·d² parameters; the estimate for GPT-2 small is 123.5M). Theory checks: the softmax Jacobian is diag(p) − ppᵀ and vanishes when softmax saturates; attention equals a Nadaraya–Watson kernel smoother; sinusoidal position shifts are fixed rotations. The cost of attention grows quadratically with context length. We then close the loop: hand-derived backprop trains a 33,072-parameter Arabic char-level GPT in NumPy (val NLL 2.566, beating the 2.682 bigram baseline), an Elman RNN on the same data loses (2.738) and its gradient reach collapses (0.2% of its value remaining at distance 16, where attention keeps O(1)); the same model in PyTorch lands at 2.631, and an Arabic WordPiece tokenizer compresses the corpus to 1.92 tokens/word (vs 4.23 for a generic tokenizer).</p><div class="en-terms"><b>Key terms:</b> <span>token</span><span>BPE</span><span>embedding</span><span>attention</span><span>softmax</span><span>causal mask</span><span>multi-head attention</span><span>positional encoding</span></div></details><div class="intro-box">هذي المرحلة هي قلب كل النماذج الحديثة. هدفها مو إنك «تستخدم» Transformer، بل إنك <b>تبنيه بيدك</b> وتشوف كل رقم يتحرّك. كل مثال هنا مكتوب بـ NumPy وبايثون صرف، <b>ونُفّذ فعليًا</b> والمخرجات اللي تشوفها حقيقية. بعد هذي المرحلة، أي بنية جديدة بتقدر تقرأها وتحدّد وش اللي غيّرته.</div>
 
 <h3 class="sec-title">٣.١ التقطيع: النموذج ما يشوف حروف ولا كلمات</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">النموذج ما يقرأ مثلنا — يقرأ مثل قارئ يتهجى «مقاطع»: الكلمة الواحدة قد تكون قطعة وحدة أو ثلاث قطع صغيرة، حسب ما تعلم من كثرة ورودها. كل شيء في عالم النماذج محسوب بهذه الوحدة: السعر، نافذة السياق، حتى جودة الفهم. فهم التقطيع هو فهم «لغة» النموذج الحقيقية — والعربية تدفع فيها ضريبة خاصة (وحدة العربية).<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>النموذج يشوف أرقام (token IDs). الـ tokenizer هو اللي يحوّل النص لقطع. لو قطّعنا بالحروف صارت السلاسل طويلة جدًا، ولو قطّعنا بالكلمات الكاملة صار القاموس ضخم وأي كلمة جديدة ما يعرفها. الحل الوسط: <span class="term">subword tokenization</span>، والأشهر <span class="term">BPE</span>: ابدأ بالحروف، وكرّر دمج أكثر زوج متجاور تكرارًا.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>from collections import Counter
 
@@ -8795,6 +8975,7 @@ newer  -&gt; ['new', 'e', 'r', '_']</pre></div>
 <div class="note"><b>تفاصيل الواقع:</b> الـ tokenizers الحقيقية تشتغل غالبًا على مستوى الـ bytes (byte-level BPE) فما تواجه حرف ما تعرفه. وكل شي في الـ API يُحسب بالـ tokens (السعر، حدود السياق)، وعدد الـ tokens للنص نفسه يختلف من tokenizer لآخر ومن لغة لأخرى. <b>لا تفترض، جرّب</b> نصوصك أنت على tokenizer النموذج اللي تستخدمه.</div>
 
 <h3 class="sec-title">٣.٢ الـ Embeddings: الرقم صار معنى</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">تخيّل خريطة مدن المسافات فيها = درجة التشابه بالمعنى: الرياض قريبة من جدة (مدن)، والرياض بعيدة عن «بيتزا»، لكن «بيتزا» و«معكرونة» جارتان. الـembedding ينقل كل كلمة/صورة/مستند إلى نقطة على هذي الخريطة — و«المعنى» يصير مسافة واتجاه يمكن حسابهما بضربة واحدة. هذي الخريطة هي أساس البحث الدلالي والترجمة والتوصيات.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>بعد التقطيع، كل token ID يتحوّل لمتّجه من الأرقام عن طريق جدول بحث. والسر: <b>الـ embedding مجرد اختيار صف من مصفوفة</b>، وقيم الصفوف تتعلّمها الشبكة أثناء التدريب.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
 
@@ -8832,6 +9013,7 @@ apple  0.00</pre></div>
 <p>الجزء الأول يثبت إن الـ lookup هو نفسه ضرب one-hot في المصفوفة. الجزء الثاني فيه متّجهات صنعناها يدويًا (أبعادها: ملكية، ذكر، أنثى، فاكهة) عشان نشوف الفكرة: «king − man + woman» وصل لـ queen. <b>انتبه:</b> هذا toy مصنوع بيدنا. الـ embeddings الحقيقية تُتعلَّم وتلتقط علاقات تقريبية مو نظيفة بهالشكل.</p>
 
 <h3 class="sec-title">٣.٣ الانتباه (Attention): بحث ناعم داخل الجملة</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">طالب يقرأ سؤال: «عاد اللاعب للملعب بعد الإصابة — مين رجع؟». كلمة «اللاعب» هي المرجع، وعقله «يلتفت» إليها قبل يجاوب. الانتباه آلية الالتفات هذي بشكل رقمي: كل كلمة تسأل «أي الكلمات الأخرى تهمني لفهمي؟» وتأخذ متوسطًا موزونًا بحسب صلة كل جواب. لا قواعد يدوية — أوزان الالتفات نفسها تتعلم من البيانات.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>كل token يسوّي ثلاث نسخ من نفسه: <b>Query</b> (وش أدوّر عليه؟)، <b>Key</b> (وش أعرض؟)، <b>Value</b> (وش أعطي لو انتبهوا لي؟). نقارن الـ Query بكل الـ Keys، نحوّل المقارنات لأوزان بـ softmax، ونحسب مزيج موزون من الـ Values. هذا كل شي.</p><div class="figure"><svg direction="ltr" class="mpl" role="img" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" style="max-width:760px" viewBox="0 0 540.36 245.16" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs></defs><g id="attn_flow__figure_1"><g id="attn_flow__patch_1"><path d="M 0 245.16 
 L 540.36 245.16 
 L 540.36 0 
@@ -9094,6 +9276,7 @@ for d in [4, 64, 1024]:
 <p>لمّا يكبر البعد d، الضرب النقطي بين متّجهات عشوائية ينتشر (الانحراف المعياري ينمو بحدود √d: ٢ ثم ٨ ثم ٣٢). القسمة على √d تثبّته عند ١ تقريبًا. بدونها، قيم كبيرة تدخل softmax فتعطي كل الوزن لـ token وحيد، والتعلّم يتعطّل.</p>
 
 <h3 class="sec-title">٣.٤ تعدد الرؤوس (Multi-Head): عدة زوايا بالتوازي</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">لجنة قراءة النص نفسه: متخصص نحو يراقب المراجع، ومتخصص معنى يلتقط التضاد، وثالث يراقب الترتيب الزمني. كل «رأس» انتباه يتعلم زاوية نظره الخاصة، ثم تُدمج القراءات. رأس واحد يرى علاقة واحدة؛ عدة رؤوس ترى الجملة كاملة من كل الجهات في نفس اللحظة.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>نقسّم البعد d على عدة رؤوس، كل رأس يسوّي attention بحاله في فضاء أصغر، وبعدين ندمج النتائج. الفكرة: رأس يلتقط علاقات نحوية وآخر يلتقط إحالات وهكذا (هذا حدس عام، والواقع أن الرؤوس تتخصّص بشكل غير نظيف).</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre><span class="c"># يعتمد على الكود السابق في نفس الدرس (انسخه أول)</span>
 def multi_head(X, Wq, Wk, Wv, Wo, n_heads, causal=True):
@@ -9119,6 +9302,7 @@ attention params: 1024 = 4 * d^2 = 1024</pre></div>
 <p>الدخل والخرج بنفس الشكل (يعني تقدر تكدّس طبقات)، وعدد معاملات الـ attention = ٤d² مهما كان عدد الرؤوس. تقدر تتأكد بنفسك في تمرين ٣.</p>
 
 <h3 class="sec-title">٣.٥ المواقع: الـ attention عمياء عن الترتيب</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">«علي ضرب خالد» و«خالد ضرب علي» — الانتباه وحده يشوف نفس الكلمات بنفس الأهمية تقريبًا، والترتيب ضاع! الحل: نعلّم كل كلمة «شارة موقع» صغيرة تضاف لمعناها، فيعرف النموذج الفرق بين البداية والنهاية. بدون هذي الشارات كان النموذج يقرأ الجملة مثل كيس كلمات مرتب عشوائيًا.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>مشكلة خفية: الـ attention ما تعرف الترتيب. «الكلب عض الرجل» و«الرجل عض الكلب» نفس المجموعة من الـ tokens. لازم نحقن معلومة الموضع.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre><span class="c"># يعتمد على الكود السابق في نفس الدرس (انسخه أول)</span>
 def sinusoidal(n, d):
@@ -9256,6 +9440,7 @@ L 426.71 29.19
 <p>السطر الأول يثبت المشكلة: لو بدّلت ترتيب الدخل، المخرجات تتبدّل بنفس الترتيب بدون أي أثر على الحساب. بعد إضافة الترميز الموضعي صار الترتيب يفرق. هذا الشكل (sinusoidal) من الورقة الأصلية. أغلب نماذج اللغة الحديثة تستخدم أسلوب ثاني (RoPE) يدخل الموضع داخل حساب Q وK، لكن المشكلة نفسها والفكرة نفسها: <b>حقن الموضع</b>.</p>
 
 <h3 class="sec-title">٣.٦ بلوك الـ Transformer كامل</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">خط تجميع في مصنع: القطعة تدخل، عامل ينظفها (الانتباه)، عامل يصلحها (الشبكة الأمامية)، ثم تنتقل للمحطة التالية — وفي كل محطة يضاف إليها «سجل المحطات السابقة» (الوصلات المتبقية) عشان ما تضيع هويتها الأصلية. كل طبقة Transformer محطة كاملة من هذي، وستك عشرين محطة ورا بعض يعني فهمًا أعمق — والرائع أن المصنع كله يبنى من نفس القطعة المكررة.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>البلوك = attention + شبكة MLP، كل واحدة محاطة بـ residual connection وnormalization. وتكدّس منه العشرات.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre><span class="c"># يعتمد على الكود السابق في نفس الدرس (انسخه أول)</span>
 def layer_norm(x, eps=1e-5):
@@ -9295,6 +9480,7 @@ estimate   : 123,532,032  (~124M; GPT-2 small is reported as ~124M)</pre></div>
 <p>طلع التقدير ١٢٣.٥ مليون، قريب جدًا من الحجم المعروف لـ GPT-2 small (~١٢٤ مليون). يعني فهمك للبلوك كافي تقدّر حجم النماذج من مواصفاتها.</p>
 
 <h3 class="sec-title">٣.٧ الثمن: تكلفة السياق تتربّع</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">حفلة داخل غرفة: كل ضيف لازم يصافح كل ضيف آخر مرة — لو الضيوف ١٠ صافحات ١٠٠، ولو ١٠٠ صافحة ١٠٬٠٠٠. الانتباه نفس الشي: كل كلمة «تصافح» كل كلمة، فمضاعفة النص تعني أربع أضعاف العمل (والذاكرة). هذا هو جدار n² الذي تدور حوله هندسة الـ LLMs كلها: نوافذ سياق أذكى، انتباه متفرق، تدوير — كل ابتكار هو طريقة لتصغير الحفلة.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>مصفوفة الانتباه حجمها n × n. هذا اللي يفسّر ليش السياق الطويل غالي:</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>print("tokens      attention matrix per head per layer (fp16)")
 for n in [1_000, 8_000, 128_000]:
@@ -10156,6 +10342,7 @@ for h in [1, 2, 4, 8]:
 <section class="stage-section" id="p4"><div class="stage-hero " style=""><span class="big-num">٤</span><div class="eyebrow">المرحلة ٤ · المحرّك</div><h2>LLMs بعمق</h2><div class="tools">٤ أسابيع</div><div class="read-time">جاهزة · ٤ أسابيع</div></div><details class="en-box" open dir="ltr"><summary>English summary</summary><p class="en-text">How a base model becomes an assistant, and how to adapt and serve it. We cover the next-token objective and perplexity, decoding (temperature, top-k, top-p), scaling laws (compute ≈ 6·N·D), SFT with loss masking, preference tuning (RLHF vs DPO), reasoning with verifiable rewards (GRPO), LoRA and QLoRA, quantization, the KV cache and structured output. Theory checks: the loss has an entropy floor, quantization error is about step²/12 (roughly 6 dB per bit), and a Bradley–Terry model recovers rewards from preferences. Valid JSON is not the same as schema-valid output. We then ran a real small local model (Qwen2.5-0.5B-Instruct on CPU) to measure prompting: a strict system prompt took JSON compliance from 5/12 to 12/12; temperature 0.1 vs 0.8 changed format compliance 9/12 vs 3/12; and chain-of-thought took an English arithmetic task from 1/12 to 10/12 while the same task in Arabic stayed 0/12 - capability gaps dominate technique, so measure your model and your language (4.12).</p><div class="en-terms"><b>Key terms:</b> <span>perplexity</span><span>temperature</span><span>top-p</span><span>SFT</span><span>DPO</span><span>GRPO</span><span>LoRA</span><span>quantization</span><span>KV cache</span></div></details><div class="intro-box">في المرحلة ٣ بنيت القلب (Transformer). هنا تفهم <b>كيف صار هذا القلب نموذجًا يجاوب</b>، وكيف تكيّفه وتشغّله وتتحكّم بتكلفته. هي أكثر مرحلة تتغيّر تفاصيلها بسرعة (أسماء الخوارزميات والنماذج)، لكن <b>الأفكار تحتها ثابتة</b>، وهذي اللي نبنيها بيدنا بـ NumPy ونشغّلها فعليًا: الـ loss، فك الترميز، LoRA، الـ quantization، الـ KV cache، والمخرجات المنظّمة. كل رقم تشوفه هنا طلع من تنفيذ حقيقي.</div>
 
 <h3 class="sec-title">٤.٠ الصورة الكاملة: من نص خام إلى نموذج يشتغل</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">تخيّل مصنعًا ضخمًا: المرحلة الأولى (pre-training) تعلّم الحرفة من قراءة نصف الإنترنت — مليارات الصفحات ولعبة وحدة: أكمِل الجملة. المرحلة الثانية (SFT) دورة تأهيل قصيرة: «الآن جاوب كمساعد محترم». المرحلة الثالثة (التفضيلات) صقل الذوق: نقارن جوابين ونعلّمه الأفضل. كل ما تراه من «ذكاء» في المحادثة هو هذي الرحلة الثلاثية — والفهم يأتي أساسًا من المرحلة الأولى.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <div class="figure"><svg direction="ltr" class="mpl" role="img" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" style="max-width:760px" viewBox="0 0 540.36 237.96" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs></defs><g id="pipeline_v2__figure_1"><g id="pipeline_v2__patch_1"><path d="M 0 237.96 
 L 540.36 237.96 
 L 540.36 0 
@@ -10296,6 +10483,7 @@ reset();
 </script>
 
 <h3 class="sec-title">٤.١ هدف التدريب: توقّع الـ token التالي وقياسه بـ Perplexity</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">اللعبة كلها: غطِّ الكلمة الأخيرة وخمّنها. تخيّل قارئ إكمال كلمات متقن — كل ما توقعاته «أقل مفاجأة» كان فهمك أعمق. الـ perplexity يجيب على سؤال بسيط: «كم خيارًا كان النموذج مترددًا بينهم في المتوسط؟» — الرقم الأصغر يعني ترددًا أقل. لكن تذكّر: هذا مقياس لغوي عام، مو شهادة ذكاء في مهمتك أنت.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>Pre-training كله هدف واحد: <b>تنبأ بالـ token التالي</b>. الخطأ يُقاس بـ cross-entropy: كم «تفاجأ» النموذج بالـ token الصحيح. وأشهر طريقة لقراءته هي الـ <span class="term">perplexity</span> = e^loss، وتعني تقريبًا: «كم خيار متساوي كان النموذج متردد بينهم». نبنيها بأبسط نموذج لغة ممكن (bigram يعدّ الأزواج):</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
 from collections import Counter
@@ -10689,6 +10877,7 @@ L 519.17 161.62
 <div class="tip"><b>قاعدة عملية:</b> مهام دقيقة (استخراج، كود، تصنيف) = حرارة منخفضة. مهام إبداعية (عصف، صياغة) = أعلى. وغيّر واحد من (temperature, top-p) مو الاثنين معًا، لأن أثرهم متداخل ويصعب تفسير النتيجة. وبعض النماذج (خصوصًا نماذج الاستدلال) تثبّت هذه المعاملات أو تتجاهلها، فاقرأ توثيق النموذج.</div>
 
 <h3 class="sec-title">٤.٣ قوانين الحجم: كم يكلّف التدريب؟</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">وصفة الكيك: طحين وحليب وفرن — لكن بمقادير متوازنة. لو ضاعفت الطحين وبقيت الفرن صغيرًا؟ كيكة فاشلة مهما زدت المكون. تدريب النماذج نفس المنطق بالأرقام: حجم النموذج وكمية البيانات وقوة الحوسبة لازم تكبر <b>معًا</b> بتناسب محسوب، وإلا فأنت تحرق ملايين الدولارات على كيكة منفوخة من جهة واحدة.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>قاعدة تقريبية مشهورة: تكلفة التدريب ≈ <b>٦ × N × D</b> عمليات (N معاملات، D tokens). وقاعدة «compute-optimal» التقريبية: حوالي ٢٠ token لكل معامل. نحوّلها لأرقام:</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre><span class="c"># rule of thumb: training compute C ~ 6 * N * D  (N = parameters, D = training tokens)</span>
 GPU_FLOPS = 2e14        <span class="c"># ASSUMPTION: 200 TFLOP/s sustained per GPU. Replace with your hardware.</span>
@@ -10737,6 +10926,7 @@ tokens that get gradient : ['&lt;assistant&gt;', 'it', 'is', '4', '&lt;eos&gt;']
 <br>• <b>تسرّب الـ eval:</b> لو ولّدت داتا التدريب بنموذج وقيّمت بنفس النموذج أو بأسئلة متشابهة، النتيجة متفائلة.</div>
 
 <h3 class="sec-title">٤.٥ التفضيلات: من RLHF إلى DPO</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">بدل ما تعطي المعلم درجة مطلقة لكل جواب («هذا ٧٣٪»)، الأسهل والأدق أن تريه جوابين وتقول: «أيّهما أفضل؟». البشر ممتازون في المقارنة وضعفاء في الدرجات المطلقة. طرق التفضيل (RLHF ثم DPO) تبني على هذي القوة: نبني من أزواج المقارنة قاعدة «ذوق»، ثم تُدفع النماذج نحو الأفضل — بدون جيش من الدرجات المزيفة.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>SFT يعلّم «كيف تجاوب»، لكن ما يعلّم «أي إجابة أحسن». هنا يجي التدريب على <b>تفضيلات</b>: أزواج (إجابة مفضّلة ومرفوضة). في <span class="term">RLHF</span> التقليدي: تدرّب reward model من تفضيلات البشر، وبعدها تحسّن النموذج بـ RL مع عقوبة للابتعاد عن النموذج الأصلي. في <span class="term">DPO</span>: تتخطى الـ reward model والـ RL، وتحسّن مباشرة بدالة loss على الأزواج.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
 
@@ -11010,6 +11200,7 @@ pass@16 = 1.000</pre></div>
 <div class="tip"><b>قاعدة قرار:</b> عندك إشارة قابلة للتحقق (رياضيات، كود، نتيجة أداة)؟ فكّر في RL. عندك تفضيلات فقط (أسلوب، لطف)؟ فكّر في DPO. وللاستخدام: انت غالبًا <b>تستهلك</b> نماذج استدلال جاهزة، فالمهم تعرف تفاوت التكلفة والـ latency (التفكير الأطول = tokens أكثر)، وتختار مستوى التفكير حسب صعوبة المهمة.</div>
 
 <h3 class="sec-title">٤.٧ LoRA وQLoRA: تكييف بكسر من التكلفة</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">عندك بدلة مفصّلة غالية (النموذج الأساسي) وتبغى تعدّلها لمناسبة سعودية؟ ما تعيد خياطة البدلة كاملة — تضيف «أستيك» صغير في مواضع محددة. LoRA نفس الفكرة: تجمّد الأوزان الأصلية (٩٩٪ من الحجم) وتدرّب «رقعًا» صغيرة قابلة للفك. تكييف كامل بجزء يسير من الذاكرة والتكلفة — وترجع للبدلة الأصلية متى ما بغيت.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>تدريب كل أوزان نموذج ضخم لمهمة صغيرة مكلف. فكرة <span class="term">LoRA</span>: جمّد الوزن W، وتعلّم <b>تغيير منخفض الرتبة</b> فقط: W' = W + (α/r)·B·A، حيث A وB مصفوفتان صغيرتان. بنيناها بالكامل بيدنا:</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
 
@@ -11245,6 +11436,7 @@ L 165.57 169.96
 <div class="pitfall"><b>متى LoRA لا يكفي؟</b> لإضافة <b>معرفة</b> جديدة (استخدم RAG، المرحلة ٦)، أو لو التغيير المطلوب في السلوك كبير ومعقّد. ولا تقرّر قبل ما تقيس: eval قبل وبعد (المرحلة ٥) هو الحكم.</div>
 
 <h3 class="sec-title">٤.٨ الـ Quantization: ذاكرة أقل بثمن محسوب</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">أرقام النموذج مخزنة بدقة عالية (١٦ خانة عشرية). الفكرة: قرّبها لأرقام أخشن (٤ خانات) — مثل ما تحفظ ٣٫١٤ بدل باي كاملة. الخطأ الناتج صغير جدًا <b>لو وزّعت التقريب بذكاء</b> (مقياس لكل مجموعة)، والذاكرة تنزل للربع — فنموذج ما كان يدخلكرتك يدخل. الثمن: درجة ضئيلة من الدقة، تقاس وتُقرر بحسب مهمتك.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>الأوزان تُخزَّن عادة بـ ١٦ بت. الـ quantization يخزّنها بـ ٨ أو ٤ بت: ذاكرة أقل (وغالبًا أسرع). الثمن: خطأ تقريب. نبنيه:</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre><span class="c"># memory for the WEIGHTS only (activations and KV cache are extra)</span>
 print("model   fp16      int8      int4")
@@ -11291,6 +11483,7 @@ int4 group of 32   4.07e-06</pre></div>
 <div class="note"><b>الخلاصة العملية:</b> الـ quantization مو «مجاني». قد يضرّ مهام معيّنة (استدلال دقيق، لغات أقل تمثيلًا، سياق طويل) أكثر من غيرها. <b>قيّم نموذجك المضغوط على مهامك أنت</b> قبل ما تعتمده.</div>
 
 <h3 class="sec-title">٤.٩ الـ KV Cache: ليش التوليد سريع، وليش الذاكرة تنفد</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">مؤلف يكتب رواية كلمة كلمة: مع كل كلمة جديدة، هل يعيد قراءة الفصل كله من أوله؟ لا — عنده دفتر ملاحظات لخّص فيه كل ما سبق. الـ KV cache هو دفتر الملاحظات هذا: نتيجات الانتباه للكلمات السابقة محفوظة جاهزة، فكل كلمة جديدة تحتاج حساب الجديد فقط. لكن الدفتر يكبر مع كل كلمة وكل مستخدم — ولهذا تنفد ذاكرة الخوادم وتُحد النوافذ.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>في التوليد، كل token جديد يحتاج K وV لكل الـ tokens السابقة. بدون تخزين، تعيد حسابها كل خطوة. بنفس attention المرحلة ٣:</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre><span class="c"># يعتمد على الكود السابق في نفس الدرس (انسخه أول)</span>
 rng = np.random.default_rng(0)
@@ -12034,6 +12227,7 @@ print(f"int4 error is {e4 / e8:,.0f}x larger than int8 (group of 32)")</pre></di
 <section class="stage-section" id="p5"><div class="stage-hero purple" style=""><span class="big-num">٥</span><div class="eyebrow">المرحلة ٥ · بناء التطبيقات</div><h2>التقييم (Evals)</h2><div class="tools">أسبوعان</div><div class="read-time">جاهزة · أسبوعان</div></div><details class="en-box" open dir="ltr"><summary>English summary</summary><p class="en-text">Evaluation is where improvements become evidence. Lexical metrics measure surface form (exact match accepted only 1 of 10 answers, while humans accepted 7), annotator agreement is limited by chance (the same two 95%-accurate annotators give kappa 0.81, 0.61 or 0.33 depending on class balance), and a single accuracy from 100 questions carries a ±9-point interval. Paired analysis is more powerful than unpaired, an LLM judge must be audited for position and verbosity bias (the MT-Bench study found GPT-4-class judges agree with humans over 80% of the time yet documented both biases), and tuning on the eval set inflates scores (winner's curse: +0.11 for the best of 100 variants on 100 questions). With only 19 queries, a bootstrap interval declared an improvement that exact tests rejected (p ≈ 0.12).</p><div class="en-terms"><b>Key terms:</b> <span>validity</span><span>exact match</span><span>Cohen's kappa</span><span>confidence interval</span><span>paired comparison</span><span>LLM-as-a-judge</span><span>position bias</span><span>winner's curse</span><span>regression gate</span></div></details><div class="intro-box"><b>ليش هذي المرحلة تخدم كل ما بعدها؟</b> كل تحسين في RAG أو الـ agents أو الـ fine-tuning هو <b>ادّعاء</b> («صار أحسن»)، والـ eval هو الأداة اللي تحوّل الادّعاء إلى دليل. وهي أكثر مكان يُخطأ فيه بصمت (Karpathy: التدريب «يفشل بصمت»، وGoogle في Rule #2: صمّم المقاييس أولًا). النهج هنا <b>نظرية ثم تجربة</b>، وكل رقم من تنفيذ حقيقي. وأضع علامة صريحة على اللي هو <b>محاكاة بمعاملات ضبطتها أنا</b> (القاضي المحاكى): تثبت <b>بروتوكول القياس</b>، لا حجم تحيّز نموذج حقيقي.</div>
 
 <h3 class="sec-title">٥.٠ ماذا نقيس؟ هرم التقييم</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">قبل تسأل «كم الدرجة؟» اسأل: «درجة في ماذا بالضبط؟». كطالب تدرس لاختبار: هل تقيس عدد الساعات (سهل لكن ما يقول شي)؟ أم نسبة الأسئلة المحلولة (أصدق)؟ أم قدرتك تحل مسألة جديدة لم ترها (المطلوب فعلًا)؟ هرم التقييم يرتّب المقاييس من الأسهل حسابًا إلى الأعمق معنى — والخطأ الشائع: تحسين ما هو سهل القياس بدل ما هو مطلوب.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>القياس الجيد له شرطان: <b>الصدق (validity)</b>: هل يقيس فعلًا ما يهمنا؟ و<b>الثبات (reliability)</b>: هل يعطي نفس النتيجة لو أعدناه؟ مقياس ثابت وغير صادق (يقيس شكل الإجابة بدل صحتها) مضلّل، ومقياس صادق وغير ثابت (حكم بشري متذبذب) لا يُبنى عليه قرار. وأدوات التقييم متدرّجة بالتكلفة والضعف:</p>
 <table class="cmp">
 <tr><th>الأداة</th><th>تقيس</th><th>تكلفتها</th><th>نقطة ضعفها</th></tr>
@@ -12114,6 +12308,7 @@ exact match accepted 1 of 10 answers; humans accepted 7</pre></div>
 <div class="note"><b>متى تنفع؟</b> للمهام ذات الإجابات القصيرة القانونية (استخراج حقل، رقم، تصنيف). وللتوليد الحر لا تعتمد عليها وحدها. الاستعاضة عنها: فحوص حتمية، ثم حكم (بشري أو LLM معاير) على <b>الدعم بالمصدر</b> (faithfulness)، لا على تشابه الكلمات. (تمرين ١ يختبر ذلك بيدك: جرّب إجابة بنفس الكلمات بترتيب مختلف.)</div>
 
 <h3 class="sec-title">٥.٢ اتفاق المُقيّمين: kappa ومفارقة الاتفاق الخام</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">مقيّمان يرميان عملة وكل واحد يكتب «إيجابي/سلبي» — سيتفقان بالصدفة نصف الوقت! فإذا شفت مقيّمين متفقين ٦٠٪ لا تستبشر: أغلب الاتفاق قد يكون مصادفة عملة. كابا تطرح «اتفاق الصدفة» هذا من الاتفاق الخام، فتوري الاتفاق الحقيقي فقط. بدون هذا التصحيح تعتقد أن تقييمك متين وهو وهم إحصائي.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>لو مُقيّمان بشريان يحكمان على «هل الإجابة مدعومة بالمصدر؟»، قد يتفقان صدفة. <b>معامل Cohen kappa</b> يصحّح ذلك: κ = (p₀ − pₑ) / (1 − pₑ)، حيث p₀ الاتفاق المشاهَد وpₑ المتوقّع صدفة من توزيع كل مُقيّم. κ=١ اتفاق كامل، ٠ = بقدر الصدفة. <b>والمشكلة:</b> لمّا فئة تهيمن (٩٧٪ مدعومة)، يتفق الاثنان غالبًا بالصدفة فيهبط κ حتى مع مُقيّمين ممتازين. وهذا مهم لأن <b>اتفاق البشر هو سقف دقة أي قاضٍ</b> (آلي أو بشري).</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
@@ -12265,6 +12460,7 @@ z
 <div class="tip"><b>عمليًا:</b> قبل ما تعتمد حكمًا بشريًا كمرجع، اجعل شخصين يحكمان على ٥٠-١٠٠ حالة وقِس κ <b>وتوزيع الفئات معًا</b>. κ منخفض مع فئة نادرة لا يعني دايمًا مُقيّمين سيئين، افحص الحالات المختلف عليها واكتب إرشادات أوضح.</div>
 
 <h3 class="sec-title">٥.٣ إحصاء التقييم: كم أثق بالرقم؟</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">استطلاع لـ١٠٠ شخص قال إن ٥٣٪ مع القرار — فهل الأغلبية معه فعلًا؟ هامش الخطأ يقول: الفرق عن ٥٠٪ أصغر من ضجيج العينة، فلا تستنتج شيًا. كل رقم تقييم (دقة نموذج، رضا مستخدمين) عنده «هامش ارتجاف» هذا — والفرق بين نموذجين داخل الهامش ليس تحسنًا بل ضوضاء. قبل تعلن فائزًا، اسأل: هل الفارق أكبر من ارتجاف العينة؟<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>الـ eval تجربة، ودرجتك تقدير من <b>عيّنة أسئلة</b>. لدقة p على n سؤال: الخطأ المعياري SE = √(p(1−p)/n)، والفاصل ±١.٩٦·SE. وعند مقارنة نظامين على <b>نفس الأسئلة</b> يجب تحليل <b>الفروق على مستوى كل سؤال (paired)</b>: صعوبة الأسئلة تتشارك فيها الأنظمة فتُلغى من الفرق، فيصغر الخطأ المعياري بقدر ارتباط درجات النظامين.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
@@ -12441,6 +12637,7 @@ L 422.27 166.93
 <p>ورقة Evan Miller (من Anthropic) تعامل التقييمات كـ<b>تجارب</b> وتوصي بإضافة الأخطاء المعيارية، وتحليل <b>الفروق المزدوجة</b> بين نموذجين، وتخطيط حجم العيّنة مسبقًا. وتذكر أن الأخطاء المعيارية «المجمَّعة» (clustered، حين تأتي الأسئلة في مجموعات مترابطة كقطع قراءة واحدة) قد تتجاوز <b>ثلاثة أضعاف</b> الأخطاء الساذجة في بعض التقييمات الشائعة، وأن الأعمدة الخطأ كانت غائبة عمومًا عن تقييمات الأسئلة والأجوبة التقليدية. وفكرة ارتباط الفرق المزدوج بمعامل الارتباط بين درجات النموذجين هي ما رأيناه عدديًا أعلاه (٠.٣٧). <b>تنبيه:</b> أرقام تجاربنا اصطناعية؛ والورقة هي المصدر للتوصيات والصيغ، لا لأحجام التأثير هنا.</p></div>
 
 <h3 class="sec-title">٥.٤ LLM-as-a-judge: قاضٍ بتحيّزات يجب قياسها</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">توظف خبيرًا ليصحح الاختبارات — أسرع بكثير من فريق كامل، لكن عنده أهواء: يفضل الخط الطويل، ينجرف لأول جواب قرأه، ويقلّد أمثلة أريته إياها. القاضي الآلي (نموذج يقيّم مخرجات نموذج آخر) نفس الشي: ممتاز ومقتصد <b>لكنه ليس محايدًا بالفطرة</b> — تحيزاته تُقاس بالتجربة (ضد تصنيفات بشرية) قبل أن تثق به، تمامًا كما تفحص خلفية أي حَكَم.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>الحكم البشري غالٍ، فيُستخدم نموذج قوي كقاضٍ (يقارن إجابتين أو يعطي درجة). لكن القاضي <b>أداة قياس</b>، ويجب معايرتها: (١) <b>تحيّز الموضع</b>: يفضّل ما يُعرض أولًا. (٢) <b>تحيّز الإطالة</b>: يفضّل الأطول. (٣) <b>الانحياز للذات</b>: يفضّل إجابات نموذجه نفسه. ولقياس الأول: قدّم له أزواجًا <b>متساوية الجودة</b> بالترتيبين، والقاضي العادل يختار الأول ٥٠٪.</p>
 <div class="realworld"><div class="rw-head"><span class="rw-icon">🌍</span> مثال واقعي ٣: ورقة MT-Bench وChatbot Arena (Zheng وآخرون، NeurIPS ٢٠٢٣)</div>
@@ -12709,6 +12906,7 @@ z
 <div class="pitfall"><b>قواعد لاستخدام قاضٍ آلي:</b> (١) قِس تحيّز الموضع والإطالة على قاضيك بأزواج متساوية. (٢) اطلب الحكم بالترتيبين وتعامل مع المتناقض كـ«غير محسوم». (٣) عايره بمجموعة حكم بشري وقِس الاتفاق (κ). (٤) لا تستخدم نموذجًا ليقيّم نفسه بدون ضوابط (الانحياز للذات لم يُحسم، لكنه خطر معقول). (٥) اجعل القاضي يقيّم <b>الدعم بالمصدر</b> بمعايير مكتوبة، لا «الجودة» العامة.</div>
 
 <h3 class="sec-title">٥.٥ بوابة الانحدار: متى أقول «تحسّن»؟</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">فريق قال «تحسّنا ٢٪!» واحتفلوا. لكن: هل ٢٪ أكبر من ضجيج القياس؟ وهل اختبرتم مرة واحدة بعد التحسين (فرصة ذهبية للحظ)? بوابة الانحدار قاعدة صارمة بسيطة: لا يعلَن تحسّن إلا إذا تجاوز عتبة محددة سلفًا وعلى بيانات تقييم لم تُلمس أثناء التطوير. بدون البوابة، «التحسينات» تتراكم على الوهم والنظام يتراجع وأنت تحتفل.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>قبل نشر أي تغيير، شغّل مجموعة الـ eval على النسختين وقرّر بقاعدة مسبقة. مع <b>عدد قليل من الأسئلة</b> المشكلة الإحصائية حادّة: فاصل bootstrap بالنسب المئوية <b>متفائل</b> حين يكون عدد الأزواج المتباينة (discordant) صغيرًا. الأمتن: <b>اختبار McNemar الدقيق</b> للنتائج الثنائية (اختبار الإشارة على الأزواج المتباينة)، و<b>اختبار التبديل بقلب الإشارات (sign-flip permutation)</b> للمقاييس المستمرة. نطبقها على نظامين من المرحلة ٦ (BM25 بلا stemming ثم مع stemmer مصحَّح) على ١٩ استعلامًا:</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre><span class="c"># يعتمد على الكود السابق في نفس الدرس (انسخه أول)</span>
@@ -12778,6 +12976,7 @@ exact test when ALL discordant pairs favour the new system: how many do you need
 <div class="tip"><b>القاعدة:</b> لا تعلن تحسّنًا من فرق خام ولا من فاصل واحد. حدّد مسبقًا اختبار القرار وعتبته (مثلًا p&lt;٠.٠٥ باختبار دقيق، وأي تدهور في شريحة حرجة يوقف النشر)، وأضف أسئلة <b>صعبة ومتباينة</b> (المرحلة ٦: السهلة تتشبّع). ولاحظ العلاقة بتجربة ٥.٣: نحتاج أسئلة كثيرة لاكتشاف فرق صغير.</div>
 
 <h3 class="sec-title">٥.٦ لعنة الفائز: لا تضبط على مجموعة التقييم</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">طالب حفظ أجوبة الاختبار التجريبي بالضبط: درجاته فيه تلاحق السقف، ومستواه الحقيقي ثابت. كل مرة تعيد التجربة على مجموعة التقييم نفسها وتختار الأفضل، أنت ذلك الطالب: تختار «محظوظ» المجموعة لا الأفضل فعلًا. الحل الصارم: مجموعة تقييم تُفتح مرة واحدة في النهاية — وكأنها ورقة الاختبار النهائي اللا تُرى قبل يومه.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>جرّبت ٥٠ صيغة prompt واخترت الأفضل على مجموعة التطوير. <b>الأفضل بينها محظوظ جزئيًا</b>: الدرجات تقدير ضوضائي، والأعلى منها يحمل ضوضاء موجبة. هذا <b>تحيّز الانتقاء (winner's curse)</b>، وهو أحد أشكال التسرّب (المرحلة ١). وقاعدة جود هارت: لمّا يصير المقياس هدفًا، يتوقف عن أن يكون مقياسًا جيدًا.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
@@ -13738,6 +13937,7 @@ fixed stemmer  hit@3 = 14/14  MRR = 0.917   missed: []</pre></div>
 </ul>
 
 <h3 class="sec-title">٦.٣ فجوة المفردات والاسترجاع الكثيف</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">سؤالك يقول «الشحن» والمستند يتكلم عن «التوصيل» — المعنى واحد والكلمات مختلفة. البحث بالكلمات (BM25) يبحث عن حروف مطابقة فيفوت المستند كليًا. الاسترجاع الكثيف يترجم السؤال والمستندات إلى «معنى» (متجهات على خريطة المعاني من ٣.٢) فيجد التشابه رغم اختلاف اللفظ. هذا هو القفزة من مطابقة نصوص إلى فهم مقاصد.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>المستخدم يسأل «بدّي أرجّع الغرض» والوثيقة تقول «سياسة الاسترداد». <b>vocabulary mismatch</b>: ما فيه كلمة مشتركة، فالاسترجاع المعجمي أعمى. الحل النظري: تمثيل <b>دلالي</b> (embeddings): نحوّل النص لمتّجه بحيث المعنى المتقارب يعطي متّجهات متقاربة، ونقيس بالـ cosine. النماذج العصبية المدرّبة مسبقًا تحمل معرفة لغوية من نصوص ضخمة خارج بياناتك، وهذا اللي يجسر الفجوة. نوعان من البنى لهما مقايضة:</p>
 <table class="cmp">
@@ -13778,6 +13978,7 @@ BM25 hit@3 on hard queries = 2/5   (the two hits share a word like 'courier' or 
 <div class="pitfall"><b>حدّ صريح في هذا الدليل:</b> ما أقدر أنفّذ نماذج embeddings عصبية في بيئتي، فما أقدر أثبت لك بالتشغيل كم تحسّن هنا — <b>اكتمل القياس لاحقًا في ٦.١٣ بنموذج حقيقي شغّلناه محليًا.</b> <b>تمرين على جهازك:</b> خذ نفس الأسئلة الـ١٩، احسب embeddings بنموذج مدرّب مسبقًا يدعم لغتك (اقرأ توثيق المكتبة الحالي)، وقارن الترتيب بنفس مقاييس ٦.٦. لا تصدّق أي «أفضل نموذج embeddings» من ترتيب عام قبل ما تختبره على مجموعتك.</div>
 
 <h3 class="sec-title">٦.٤ البحث التقريبي (ANN): السرعة مقابل الدقّة</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">مكتبة بمليون كتاب: البحث المثالي يقارن سؤالك بكل كتاب — دقيق لكن بطيء بجنون. الحل: فهرس ذكي يقسم المكتبة إلى أحياء، فتقفز مباشرة للحي القريب وتفحصه فقط. قد يفوت كتابًا في حي مجاور (دقة ٩٥-٩٩٪ بدل ١٠٠٪) — مقابل سرعة أعلى بمئات المرات. المقايضة هذه هي التي تجعل البحث الدلالي عمليًا في الإنتاج.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p><b>النظرية:</b> البحث الدقيق عن أقرب جار يمسح كل المتّجهات: تكلفته N × d لكل استعلام. مع ملايين المتّجهات لا يناسب. الحل: <b>تقريبي</b>. الأسلوب الأبسط <span class="term">IVF</span>: قسّم المتّجهات لخلايا (k-means)، وعند الاستعلام امسح فقط الخلايا الأقرب (nprobe). أسلوب آخر شائع <span class="term">HNSW</span> (رسم بياني متعدد الطبقات تتنقّل فيه للأقرب). كلها تقايض <b>recall مقابل زمن</b>، وتضبط المقايضة بمعامل (nprobe، أو efSearch في HNSW).</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
 
@@ -13941,6 +14142,7 @@ k=60  score(rank 1) / score(rank 5) = 1.07</pre></div>
 <div class="realworld"><div class="rw-head"><span class="rw-icon">🌍</span> أين تظهر هذي القاعدة بالواقع؟</div><p>في دراسة Stanford أعلاه، قوة النتائج جاءت من أنهم بنوا مجموعة أسئلة قانونية حقيقية وصنّفوا الإجابات (هلوسة، ناقصة، صحيحة) بتصنيف مسبق. مو من «جرّبنا كم سؤال وطلع كويس». هذا هو الفرق بين تقييم وانطباع.</p></div>
 
 <h3 class="sec-title">٦.٧ التقطيع (Chunking): مقايضة الدقّة والسياق</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">تقطع كتابًا لبطاقات مراجعة: بطاقات ضخمة تحمل كل شي لكن التشتت يغرق المهم، وبطاقات دقيقة صغيرة تفقد الجملة سياقها («القرار رقم ٣» — أي قرار؟!). تقطيع المستندات نفس المعادلة: مقاس البطاقة + التداخل بين البطاقات يحدد إن كان الاسترجاع يصل للفقرة الصحيحة بسياقها. لا يوجد مقاس سحري — المقاس الصحيح يُقاس على بياناتك.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p><b>النظرية:</b> قطعة صغيرة جدًا = دقيقة لكنها قد تفقد ما يفسّرها (جملة «Below that amount the fee is 15» بدون الجملة اللي قبلها). قطعة كبيرة جدًا = تضم الجواب مع ضجيج، فتخفّف دلالتها وتستهلك ميزانية السياق (وتحتمل «الضياع في الوسط»، ٦.٩). جرّبنا جمع ٢١ وثيقة في ٣ «أدلة» وتقطيعها بأحجام مختلفة، مع أسئلة جوابها جملة وحدة وأسئلة جوابها جملتان متجاورتان:</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre><span class="c"># يعتمد على الكود السابق في نفس الدرس (انسخه أول)</span>
 import random
@@ -14353,6 +14555,7 @@ benign security doc    flagged = True</pre></div>
 <div class="tip"><b>عدسة المستقبل:</b> اسأل أول: هذا يغيّر الفهرسة أو الاستعلام؟ وأي فشل في جدول ٦.١١ يعالج؟ ثم اسأل عن الثمن (تكلفة، latency، تعقيد) وكيف تقيسه على eval مجموعتك. أي تقنية ما تعالج فشلًا حقيقيًا قِستَه عندك، تأجّل عنها.</div>
 
 <h3 class="sec-title">٦.١٣ الاسترجاع الكثيف الحقيقي: embeddings وقاعدة متجهات من الصفر</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">حتى الآن استعرنا «خريطة المعاني» الجاهزة من نموذج مدرب مسبقًا. هنا نبني المنظومة كاملة بأيدينا: نموذج يترجم النص لنقطة على الخريطة، وقاعدة بيانات تحفظ ملايين النقاط وتجيب بسرعة البرق على «أقرب جار». فهم كل ترس في السلسلة — لأن يومًا ما سيتعطل الترس الأغلى، وستحتاج تعرف أي واحد.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>هذا الدرس يسدّ أقدم اعتراف في المرحلة (٦.٣: «ما أقدر أنفّذ نماذج embeddings عصبية في بيئتي»): شغّلنا أثناء تحرير الدليل نموذجًا حقيقيًا محليًا على CPU — ‏<b>paraphrase-multilingual-MiniLM-L12-v2</b> (‏١١٨ مليون معامل، ٣٨٤ بُعدًا، مدرّب على ٥٠+ لغة بينها العربية). نموذج صغير عمدًا: يعمل على أي جهاز، وتقيس نتائجه <b>الآلية والمنهج</b> لا النموذج الأمثل — اختر نموذج embeddings أحدث وقِس على مجموعتك بنفس الخطوات.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>def embed(texts, batch=16):
     """mean pooling + L2 normalize — نفس ما يفعله sentence-transformers لهذا النموذج."""
@@ -14579,6 +14782,60 @@ for q in ["is shipping free", "refund approval limit for agents", "what coupon c
 <h3 class="sec-title">أ.١ تكلفة العربية بالـ tokens: نفس المعنى، ثلاثة أضعاف الثمن</h3>
 <h4 class="sub-title">النظرية</h4>
 <p>الـ token هو وحدة القياس في كل شي يخصك: السعر (٤.١١)، ونافذة السياق (٣.٧)، وحتى جودة الفهم. والمقطّع (٣.١) ما يفهم «كلمات»، هو يقطّع حسب ما تعلّم من بيانات تدريبه. هنا مشكلتان تضاعفان بعض للعربية: (١) <b>التمثيل:</b> لو العربية أقل حضورًا في بيانات تدريب المقطّع، الكلمات العربية تتفتت لقطع أصغر وأكثر. (٢) <b>البنية:</b> العربية لغة لاصقة (agglutinative) بالسوابق واللواحق: «والتقسيط» كلمة وحدة إملائيًا لكنها ثلاث وحدات معنوية (و + ال + تقسيط)، فمعنى كامل يسقط داخل token واحد للقارئ العربي وعدة tokens للنموذج. نبني القياس بدل الافتراض:</p>
+
+<div class="ixw" id="tka">
+<div class="ix-head"><span class="ix-badge">🧪 جرّب بنفسك</span><b>ملعب التقطيع العربي: عدّل الجملة وشوف كيف «يراها» المقطّع (أ.١ ↔ ٣.١)</b></div>
+<div class="ix-controls" style="flex-direction:column;align-items:stretch">
+<textarea id="tka-in" rows="2" style="width:100%;background:var(--surface-2);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-family:inherit;font-size:14px">وذهب الطلاب إلى مكتبة الجامعة، وطلبوا تقسيط الفواتير!</textarea>
+<div id="tka-out" style="line-height:2.4"></div>
+<div class="ix-note" id="tka-read" style="margin:0"></div>
+</div>
+<div class="ix-note">كل مربع ملوّن = token واحد كما يراه المقطّع. الكلمات الشائعة في «معجم الدمج» تخرج قطعة وحدة، والكلمات المشتقة تتفتت لواحقها (و+ال+...). لاحظ الفجوة: «تقسيط» و«أقساط» و«قسّط» معنى واحد تقريبًا لكن قطعها مختلفة — فالبحث المعجمي الدقيق (BM25 مثلًا) قد يفوّتها، وهذا أحد أسباب الاسترجاع الكثيف (٦.٣). جرّب تكتب كلمة نادرة أو اسم علم وشوف تتفتت حرفًا حرفًا.</div>
+</div>
+<script>
+(function(){
+var VOCAB=["ال","وال","بال","فال","كال","لل","و","ب","ل","ف","ك","ذاهب","ذهب","طلاب","طالب","طال","إلى","مكتب","مكتبة","ة","جامع","جامعة","طلب","طلبوا","وا","تقسيط","قسط","سيط","فاتور","فاتورة","ات","في","من","عن","على","هذا","هذه","ما","لا","ن","ت","ي","م","س","ر","ع","ح","د","ك","و","أ","ا","ب","ل","ه"];
+VOCAB.sort(function(a,b){return b.length-a.length});
+var inp=document.getElementById("tka-in"),out=document.getElementById("tka-out"),read=document.getElementById("tka-read");
+function normalize(t){
+return t.replace(/[ً-ْٰـ]/g,"").replace(/[أإآٱ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه");
+}
+function split(t){return t.split(/\s+/).filter(Boolean)}
+function tokenize(w){
+var pieces=[],i=0;
+while(i<w.length){
+ var hit=null;
+ for(var v=0;v<VOCAB.length;v++){var p=VOCAB[v];
+  if(p.length && w.startsWith(p,i)){hit=p;break}}
+ if(hit){pieces.push(hit);i+=hit.length}
+ else{pieces.push(w[i]);i++}
+ }
+ return pieces;
+}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function upd(){
+var raw=inp.value;
+var norm=normalize(raw);
+var words=split(norm.replace(/[,!.؟?،:؛"()]/g," "));
+var nTok=0,html="",frag=0;
+words.forEach(function(w){
+ var ps=tokenize(w);
+ nTok+=ps.length;
+ ps.forEach(function(p){
+  var bg=["#e8f0ec","#f5ecdf","#eef0e2","#f0e8ee"][frag%4];
+  html+='<span style="background:'+bg+';border:1px solid #d8ccc0;border-radius:5px;padding:1px 5px;margin:0 1px;white-space:nowrap" title="token">'+esc(p)+'</span>';
+  frag++;
+ });
+ html+='<span style="opacity:.35"> </span>';
+});
+if(!words.length)html='<span style="color:var(--ink-soft)">اكتب شيئًا فوق…</span>';
+out.innerHTML=html;
+read.innerHTML="الكلمات (بعد التطبيع): <b>"+words.length+"</b> · الـtokens: <b>"+nTok+"</b> · معدل التفكك: <b>"+(words.length?(nTok/words.length).toFixed(1):0)+"</b> token لكل كلمة · التطبيع حوّل: "+esc(raw.length?norm.slice(0,40):"")+(norm!==raw?" …":" (لا شيء هنا)");
+}
+inp.oninput=upd;upd();
+})();
+</script>
+
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import re
 import tiktoken
 enc = tiktoken.get_encoding("cl100k_base")  # the GPT-3.5/4 family tokenizer - ALWAYS check YOUR model's
@@ -14629,6 +14886,7 @@ a 13-word Arabic sentence splits into 57 Arabic-bearing tokens; the longest are:
 <div class="note"><b>الذي أقوله والذي لا أقوله (صدق):</b> (١) الرقم ٣.٢٢× خاص بـ cl100k_base وبهذه الجمل؛ مقطّعات أحدث حسّنت العربية، فنسبة ٣× قد تصير أقل عند نموذجك، لكن الاتجاه ثابت. (٢) التداعيات عملية: تكلفة أعلى لكل طلب (٤.١١)، ونافذة سياق «فعليّة» أقصر بالعربي (نفس النافذة تتسع أقل معلومة)، ونصوص تدريب أقل انضغاطًا. (٣) لا تعالجها بالمبالغة في «اختصار» العربية للمستخدم، عالجها بالقياس: احسب تكلفة مجالك أنت (تمرين ١) وخذها في الحسبان عند اختيار النموذج (٤.١٢) وعند التقطيع والضغط (٦.٧).</div>
 
 <h3 class="sec-title">أ.٢ التطبيع بعمق والتجذير الخفيف: قِس كل مستوى لحاله</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">قبل تقارن اسمين في قائمة: توحّد الهمزات (أحمد/احمد) والتاء المربوطة والياءات — فتصبح «المشابه ظاهريًا» متطابقة فعلًا. هذا كل التطبيع: مكيّف إملائي رخيص قبل أي مقارنة نصية. والتجذير الخفيف يذهب خطوة أبعد: يردّ «تقسيط/أقساط/قسّط» لأصل واحد. القاعدة الذهبية: طبّق الأقل كافيًا — فالتوحيد الزائد يذيب كلمات مختلفة المعنى في قالب واحد.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>الدرس ٦.٨ طبّق التطبيع الأساسي وحسّن النتيجة من ٥/٨ إلى ٧/٨. هنا نفكّك المعالجة لثلاثة مستويات ونقيس أثر كل واحد: <b>المستوى ٠:</b> بلا أي معالجة (كل شكل كلمة كيان مستقل). <b>المستوى ١ (تطبيع كامل):</b> توحيد الكتابة الموحدة للكلمة الواحدة: حذف التشكيل والتطويل والألف الخنجرية، توحيد الهمزات على الألف (أ إ آ ٱ ← ا)، الألف المقصورة (ى ← ي)، التاء المربوطة غير الرسمية (ة ← ه)، والأرقام العربية-الهندية (٠-٩ ← 0-9). <b>المستوى ٢ (تجذير خفيف):</b> قصّ السوابق اللاصقة (وبال، فال، وال، بال، كال، لل، ال) واللواحق الشائعة (ون، ين، ها، هم، ه...). وهو «خفيف» عمدًا: تجذير عربي حقيقي يعود للجذر، ومعقّد بما يكفي أن يكون مكتبة بذاتها. القاعدة من ٦.٢ تسري هنا: كل دمج قد يرفع الـ recall ويضرّ الـ precision، فلا تفترض، قِس.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import re, math
@@ -14731,6 +14989,7 @@ limits: queries that still fail after normalization + light stemming (the cause 
 <div class="pitfall"><b>ثلاث مشاكل مختلفة كثيرًا ما تخلط:</b> (١) <b>كتابة غير موحّدة</b> (ارجاع/إرجاع، شحنه/شحنة): يعالجها التطبيع، ورأينا أثرها (+٣ أسئلة). (٢) <b>خطأ إملائي حقيقي</b> (المبلع بدل المبلغ): لا يعالجه تطبيع ولا تجذير؛ يحتاج تصحيح إملائي أو مقارنة ضبابية أو embeddings. (٣) <b>فجوة صرفية</b> (توصل مقابل التوصيل، يصل مقابل يستغرق): صيغ فعل مختلفة لنفس الجذر؛ هذا مملكة التجذير الحقيقي أو التمثيلات الدلالية، ولهذا سؤال «متى توصل الطلبيه» فشل في كل المستويات الثلاثة.</div>
 
 <h3 class="sec-title">أ.٣ اللهجة: فجوة مفردات وصرف، مو كتابة</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">سعودي ومصري يكتبان «العربية الفصحى» بنفس الإملاء تقريبًا — لكن «وش رأيك؟» و«إيه رأيك؟» مفردات مختلفة تمامًا. فجوة اللهجة ليست أخطاء إملائية بل <b>مفردات وصرف آخر</b>: أفعال وضمائر واشتقاقات خاصة. النموذج المدرب على فصحى وأنماط خليجية سيجهد مع العامية المصرية — والحل ليس تصحيح إملاء بل بيانات تمثل لهجة مستخدميك.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>الدرس ٦.٨ لمّح للفشل بسؤال واحد («ابي ارجع البضاعه»). هنا نقيس الفجوة أولًا، ثم نعالجها بأرخص وسيلة، ونحدد بالضبط وين تنتهي:</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre># يعتمد على الكود السابق في نفس الدرس (انسخه أول)
 AR_DOCS3 = {"a1": "يمكن للعميل إرجاع المنتج خلال أربعة عشر يومًا من تاريخ الاستلام.",
@@ -14843,6 +15102,7 @@ evaluate(tok_stem2, "+ لاحقات إضافية")  # قارن مع 9/12 وفس�
 <section class="stage-section" id="p7"><div class="stage-hero purple" style=""><span class="big-num">٧</span><div class="eyebrow">المرحلة ٧ · بناء التطبيقات</div><h2>Agents</h2><div class="tools">٥ أسابيع</div><div class="read-time">جاهزة · ٥ أسابيع</div></div><details class="en-box" open dir="ltr"><summary>English summary</summary><p class="en-text">An agent is a model plus a harness running a loop. This phase builds the loop from scratch, then adds what production needs. Memory is a token-budget decision: keeping only the most recent turns recalled 1 of 6 planted facts at 400 words, and lexical retrieval stalled at 4 of 6 because of vocabulary mismatch. LangGraph makes the loop an explicit graph with state, reducers and checkpoints; interrupt() lets a human approve, reject or edit a risky call, but the interrupted node re-runs on resume, and the model's closing words are not evidence that an action happened. MCP standardizes tools, resources and prompts between clients and servers; its 2026-07-28 revision is stateless, MCP SDK 2.x renamed FastMCP to MCPServer, and tool names or descriptions from different servers are untrusted input. Anthropic measured multi-agent research at about 15x the tokens of a chat (about 4x for a single agent) on its own internal eval; in an accounting model most of the saving comes from not re-reading old tool output, which compaction also achieves. Agent evaluation should judge the final state, and pass^k measures reliability: a 90%-reliable agent succeeds 10 times in a row only 35% of the time. For security, the lethal trifecta (private data, untrusted content, external communication) should never meet in one session. We then add two production habits: a JSONL trace of every agent step (tool, args, result) that exposed a final answer contradicting a recorded tool result without re-running anything, and a reflection loop with a deterministic verifier that caught the wrong arithmetic and forced a corrected retry - preferring mechanical checks over self-critique wherever possible (5.4).</p><div class="en-terms"><b>Key terms:</b> <span>context engineering</span><span>reducer</span><span>checkpoint</span><span>interrupt</span><span>MCP</span><span>tool-name collision</span><span>orchestrator–worker</span><span>pass^k</span><span>lethal trifecta</span></div></details><div class="intro-box"><b>المرحلة مكتملة الآن:</b> الأساس (الـ loop والأدوات والحماية، ٧.١–٧.٥) ثم ما يحتاجه الإنتاج: الذاكرة، LangGraph، MCP، multi-agent، تقييم الوكلاء، والأمان (٧.٦–٧.١١). القاعدة هنا: <b>ابنِ الـ loop بيدك أول، وبعدين استخدم الـ framework</b>. وفي الجزء الثاني <b>شغّلت LangGraph وMCP فعليًا</b> (مو كود من الذاكرة)، ولقيت إن الواجهات تتغيّر فعلًا (٧.٨).</div>
 
 <h3 class="sec-title">٧.١ وش هو الـ agent فعلًا؟</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">الموظف العادي ينتظر أوامر مفصلة خطوة بخطوة. الموظف «الوكيل» يستلم <b>هدفًا</b> وأدوات، ويقرر بنفسه: أبحث الآن، ثم أستدعي الأداة، ثم أتحقق، ثم أعيد. الفرق الجوهري ليس الأدوات — هو <b>دورة القرار</b>: النموذج يقود الخطوة التالية بناء على نتيجة الخطوة السابقة. أعطه الهدف ووش تحتاج إنجازه، لا تعليمة واحدة.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>الـ agent = نموذج + <b>harness</b> (كل شي حول النموذج: الأدوات، الذاكرة، حدود التنفيذ، الحماية). والجوهر loop بسيط: النموذج يقرأ المحادثة، يقرّر <b>إما يجاوب أو يطلب أداة</b>، الـ harness ينفّذ الأداة ويرجّع النتيجة للنموذج، ويتكرر لين النموذج يجاوب أو تنتهي الميزانية.</p><div class="figure"><svg direction="ltr" class="mpl" role="img" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" style="max-width:760px" viewBox="0 0 509.13 259.56" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs></defs><g id="agent_loop__figure_1"><g id="agent_loop__patch_1"><path d="M 0 259.56 
 L 509.13 259.56 
 L 509.13 0 
@@ -14939,6 +15199,7 @@ z
 <div class="intuition"><b>الفرق بين workflow وagent:</b> في الـ workflow أنت تكتب المسار بالكود (خطوة ١ ثم ٢ ثم ٣) والنموذج ينفّذ أجزاء منه. في الـ agent النموذج هو اللي يقرّر الخطوة التالية. <b>نصيحة صريحة:</b> لو تعرف الخطوات مسبقًا، استخدم workflow أو استدعاء واحد. الـ agent يستاهل لمّا الخطوات تعتمد على اللي يطلع بالطريق ومستحيل تحدّدها قبل. هو أغلى وأبطأ وأصعب بالاختبار.</div>
 
 <h3 class="sec-title">٧.٢ نبني الـ loop من الصفر</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">كل الوكلاء مهما تعقدوا يرجعون لدورة واحدة بسيطة: <b>فكّر ← نفّذ ← لاحظ ← كرر</b>. مثل عامل نظافة في مبنى ضخم: يفكر «وين أبدأ الآن؟»، ينظف، يشوف النتيجة، يقرر المحطة الجاية — حتى ينتهي المبنى (أو ينتهي وقت الدوام!). الميزانيات والحواجز وأشكال الرسوم البيانية المزخرفة كلها زخارف مبنية على هذه الحلقة الأساسية — افهمها بعمق وكل Framework يصير واضحًا.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>بدل نموذج حقيقي نستخدم <span class="term">ScriptedModel</span> يرجّع ردودًا مبرمجة مسبقًا. ليش؟ (١) الكود يشتغل أوفلاين بدون مفتاح API، (٢) نثبت <b>سلوك الـ harness</b> بشكل قابل للتكرار، وهذا اللي تختبره أصلًا. تبديله بنموذج حقيقي يعني تغيير دالة وحدة: <code class="inline">model(messages) → {"type": "tool_call" | "final"}</code>.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import json
 
@@ -15070,6 +15331,7 @@ step 3: final -&gt; Done. (The harness blocked the dangerous call.)</pre></div>
 <div class="tip"><b>عدسة المستقبل:</b> أي framework agent جديد يطلع، افتح الجدول واسأل: وش الطبقة اللي يضيفها؟ (حالة؟ تخطيط؟ ذاكرة؟ بروتوكول أدوات؟) وبعدها اسأل الثمن: وش القرارات اللي أخذها عنّي وما أقدر أغيّرها؟</div>
 
 <h3 class="sec-title">٧.٦ ذاكرة الوكيل وهندسة السياق (Context Engineering)</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">طاولة عمل النجّار: كل أداة ومستند «على الطاولة» ياخذ مساحة — والطاولة محدودة (نافذة السياق). المهارة ليست جمع كل شيء، بل تنظيف مستمر: الأدوات اللي تحتاجها الآن فقط، وملخص لما سبق بدل النص الكامل، ودفاتر خارجية للأرشيف (الذاكرة طويلة المدى). إدارة الطاولة هذه هي «هندسة السياق» — وقد تتقدم على جودة النموذج نفسه.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>النموذج لا «يتذكّر»: كل استدعاء يرى فقط <b>نافذة السياق (context window)</b> اللي أرسلتها له في هذي المرة، وأي شي خارجها غير موجود بالنسبة له. فصارت الذاكرة قرارًا هندسيًا: <b>وش ندخل في كل استدعاء، تحت ميزانية tokens؟</b> وهذا اللي يسمّونه <b>context engineering</b>. وللذاكرة ثلاثة أنواع: <b>قصيرة المدى</b> (رسائل الحلقة الحالية)، و<b>حالة العمل</b> (state منظَّم: الخطة والمتغيرات)، و<b>طويلة المدى</b> (مخزن خارجي يُسترجَع منه عند الحاجة). والعمليات الأساسية أربع: قصّ (trim)، وضغط/تلخيص (compaction)، واسترجاع (retrieve)، وكتابة (write). ومخاطرها: ضياع المعلومات القديمة، وفجوة المفردات في الاسترجاع (مثل المرحلة ٦)، وتسميم الذاكرة (معلومة خاطئة أو محقونة تبقى)، وتكلفة تنمو لأن كل استدعاء يعيد قراءة التاريخ كله (٧.٩).</p>
 <h4 class="sub-title">التجربة: ٦ حقائق مزروعة في محادثة من ٣٠٠ دور</h4>
@@ -15275,6 +15537,7 @@ L 247.25 235.31
 <div class="pitfall"><b>التجربة نفسها eval:</b> «حقائق مزروعة + أسئلة لاحقة» هي طريقة قياس الذاكرة (جرّبها على استراتيجيتك قبل الاعتماد عليها). وانتبه لمسار الكتابة: من يقدر يكتب في الذاكرة طويلة المدى؟ نص محقون في صفحة ويب ممكن يصير «ذكرى» دائمة (٧.١١). وفكّر في الانتهاء والمصدر وحذف البيانات الشخصية، وراجع متطلبات PDPL مع مختص.</div>
 
 <h3 class="sec-title">٧.٧ LangGraph: الحلقة كرسم بياني بحالة قابلة للحفظ</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">خريطة مترو: محطات (خطوات) ومسارات (قرارات: إلى أي محطة بعدين؟) — وبطاقة تتبع (الحالة) ترافق الرحلة. LangGraph يرسم وكيلك بهذا الشكل: عقدة «يفكر» وعقدة «أداة» وحواف مشروطة، والحالة كاملة تُحفظ — فتقدر تتوقف عند محطة «موافقة بشرية» وتكمل بعدها، أو ترجع خطوة للخلف. نفس حلقة ٧.٢ لكن مكتوبة كخريطة يراقبها ويحفظها النظام.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>حلقتنا اليدوية (٧.١) تعمل، لكن لو بغينا نوقفها لموافقة بشرية، أو نكملها بعد انقطاع، أو نرجع لخطوة سابقة، نحتاج الحالة <b>صريحة ومحفوظة</b>. LangGraph يمثّل الحلقة كـ<b>رسم بياني</b>: <b>state</b> مكتوب الأنواع، و<b>nodes</b> (دوال: state ← تحديث جزئي)، و<b>edges</b> (ثابتة أو شرطية)، و<b>reducer</b> يحدّد كيف تُدمَج التحديثات (مثل: أضف الرسائل ولا تستبدلها). وبعد كل خطوة يحفظ <b>checkpoint</b> للحالة، وهذا أساس الإيقاف والاستئناف والإعادة (<b>durable execution</b>). وLangGraph لا يستدعي نموذجًا بنفسه: النموذج مجرد دالة داخل عقدة.</p><div class="figure"><svg direction="ltr" class="mpl" role="img" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" style="max-width:760px" viewBox="0 0 540.36 259.56" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs></defs><g id="lg_graph__figure_1"><g id="lg_graph__patch_1"><path d="M 0 259.56 
 L 540.36 259.56 
@@ -15532,6 +15795,7 @@ for budget in [100, 200, 400, 800, 1600, 3200]:
     print(f"budget {budget:&gt;5}: rule-based summary {sum(got)}/6 | last turns only {sum(got_r)}/6 | {budget / sum(nwords(t) for t in turns):.0%} of the full history")</pre></div></div></div>
 
 <h3 class="sec-title">٧.٨ MCP: بروتوكول موحّد للأدوات والسياق</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">قبل USB: كل جهاز بكابله الخاص ودرايفره الخاص — فوضى تكامل. MCP هو «منفذ USB» لعالم النماذج: أي أداة تُكتب مرة واحدة بهذا المعيار، فتشتغل مع أي نموذج/تطبيق يدعم المعيار. تكتب خادم MCP لقاعدة بياناتك مرة، ويستفيد منه Claude وGPT وأي عميل آخر — بدل ربط مخصص لكل زوج.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>بدون معيار، كل تطبيق يكتب تكاملاته مع كل أداة بطريقته (N تطبيق × M أداة). <b>Model Context Protocol (MCP)</b> يوحّد ذلك: تطبيق <b>host</b> (فيه النموذج) يشغّل <b>MCP client</b> لكل <b>server</b>، والخادم يعرض ثلاث <b>primitives</b>: <b>tools</b> (أفعال يستدعيها النموذج)، و<b>resources</b> (بيانات للقراءة بعنوان URI)، و<b>prompts</b> (قوالب يختارها المستخدم). والنقل (transport) إما <b>stdio</b> (خادم محلي كعملية فرعية) أو <b>streamable HTTP</b> (خادم بعيد). هنا نبني خادمًا حقيقيًا ونكلّمه بعميل حقيقي (وليس محاكاة):</p><div class="figure"><svg direction="ltr" class="mpl" role="img" xmlns:xlink="http://www.w3.org/1999/xlink" width="100%" style="max-width:760px" viewBox="0 0 518.85 259.56" xmlns="http://www.w3.org/2000/svg" version="1.1"><defs></defs><g id="mcp_arch__figure_1"><g id="mcp_arch__patch_1"><path d="M 0 259.56 
 L 518.85 259.56 
@@ -15767,6 +16031,7 @@ description check for web-search.search: FLAGGED ['full name', 'phone number', '
 </ul>
 
 <h3 class="sec-title">٧.٩ متى تستخدم multi-agent (ومتى لا)</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">مشرف وعاملان ينجزون أسرع من عامل واحد — لكن الاجتماعات تضيع الوقت، والرسائل تُساءن فهمها، والأخطاء تتضاعف عبر الطبقات. multi-agent ليس «أكثر = أفضل»: هو مقايضة <b>توازي وتخصص</b> مقابل <b>تكلفة تنسيق وأخطاء اتصال</b>. ابدأ بوكيل واحد بأدوات جيدة، ولمّا تثبت أن عنق الزجاجة هو التوازي الحقيقي (لا مجرد إعجاب بالصياغة) — عندها فقط قسّم.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>أشهر نمط: <b>orchestrator–worker</b>: وكيل قائد يخطّط ويوزّع مهامًا على وكلاء عمّال، لكل واحد <b>سياق خاص</b>، ويرجعون له بملخّصات. ونمط آخر <b>handoff</b> (يمرّر وكيل التحكم لآخر). المتعدد مناسب لمهام <b>واسعة قابلة للتوازي</b> (بحث في اتجاهات مستقلة) أو أكبر من نافذة سياق واحدة، وغير مناسب لمهام <b>مترابطة الخطوات</b> أو صغيرة (التنسيق يكلّف) أو يكفيها وكيل واحد مع إدارة سياق جيدة.</p>
 <div class="realworld"><div class="rw-head"><span class="rw-icon">🌍</span> حالة واقعية ٣: نظام البحث متعدد الوكلاء من Anthropic</div>
@@ -16521,6 +16786,7 @@ agent(m, "loop", max_steps=6, runner=limited)</pre></div></div>
 <section class="stage-section" id="p8"><div class="stage-hero blue" style=""><span class="big-num">٨</span><div class="eyebrow">توسّع وإنتاج</div><h2>رؤية + متعدد الوسائط: من المرشحات إلى CLIP</h2><div class="tools">NumPy (conv/pool) · CLIP حقيقي محليًا · نقل تعلم</div></div><details class="en-box" open dir="ltr"><summary>English summary</summary><p class="en-text">Vision from the inside, then multimodality with a real model. A convolution layer with hand-derived backward passes its gradient check (worst 1.2e-09) and so does the full conv-relu-maxpool chain across all 54 parameters (median 2.2e-10) - with an honest note that ReLU/pool kinks are non-differentiable points where finite differences legitimately disagree. A classic edge kernel shows what convolutions detect (max activation exactly at the dark-to-light transition). Then CLIP (151M params, run locally on CPU) maps images and text into ONE space: zero-shot classification of programmatically drawn shapes scores 3/3 with a visible similarity matrix (saturated softmax - the phase 3.9 lesson), Arabic prompts score only 1/3 (CLIP was trained primarily on English - the language gap, measured), and transfer learning with FROZEN CLIP features plus a linear head reaches 1.000 test accuracy on 45 drawn images vs 0.667 for raw pixels on the same head - the value of pretrained features, quantified. SAM3, YOLO and VLMs are bridged conceptually but explicitly not executed (no suitable weights in the build environment).</p><div class="en-terms"><b>Key terms:</b> <span>convolution</span><span>max-pooling</span><span>gradient check</span><span>CLIP</span><span>zero-shot</span><span>transfer learning</span><span>frozen features</span></div></details><div class="intro-box"><b>مقدار الرؤية هنا:</b> ما يخدم هدف الدليل (اللغة والوكلاء) لا مسار رؤية كامل: ‏CNN من الداخل بيدك، ثم CLIP حقيقي لأنه بوابة «متعدد الوسائط»، ثم نقل تعلم يقيس قيمة الخصائص المسبقة. <b>عقد الصدق:</b> كل شيء في ٨.١-٨.٣ نُفِّذ وقت تحرير الدليل (CLIP ‏151M معامل على CPU، والصور مولَّدة برمجيًا بـPillow — لا صور إنترنت ولا أوزان خارجية). أما ‏SAM3 وYOLO والنماذج اللغوية-البصرية فجسر مفاهيمي في ٨.٤ معلَّم «غير منفَّذ».</div>
 
 <h3 class="sec-title">٨.١ الالتفاف والتجميع من الصفر: نفس قواعد المرحلة ٢</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">مرر عدسة مكبرة صغيرة على صورة قديمة، مسحة مسحة: كل مسحة «تنظر» لجزء صغير وتبحث عن نمط واحد (حافة، زاوية، نسيج). النتيجة: خريطة «وين لقيت النمط هذا». الطبقة التالية تجمع الخرائط في أنماط أكبر (الحوافتان المتجاورتان = زاوية) — وهكذا يبني النموذج هرم الفهم: من خطوط إلى أشكال إلى عيون ووجوه. الالتفاف هو المسحة، والتجميع هو التصغير الذكي للخرائط.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>الالتفاف (convolution) مرشح صغير يُمرَّر على الصورة: كل موضع output = مجموع (نافذة × نواة). حيوده قابل للاشتقاق يدويًا مثل كل ما بنيناه: كل بكسل output أخذ مساهمة من نافذة في المدخل فتوزَّع تدرّجه عليها، والأوزان تجمع مساهمات كل النوافذ التي لمستها. والـ max-pool يمرر التدرج <b>للعنصر الأكبر وحده</b> في كل نافذة (وهو أصل كونه غير قابل للاشتقاق عند التعادل). والقاعدة من ٢.٢: <b>gradient check قبل أي تدريب</b>.</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>def conv2d(X, W, b):
@@ -16643,6 +16909,69 @@ print(f"  max-pool 2x2 قلّص 8x8 إلى {maxpool2(relu(conv2d(pat, edge, np.z
 
 <h3 class="sec-title">٨.٢ CLIP: صورة ونص في فضاء واحد — حقيقي على جهازك</h3>
 <p>فكرة CLIP (Radford وآخرون ٢٠٢١): درّب مشفّر صور ومشفّر نص معًا بحيث تقترب تمثيلات الصورة ونصها المتطابقين. النتيجة: <b>تصنيف zero-shot</b> — بلا أي تدريب على فئاتك، تكتبي الفئات كنصوص وتقارن التشابه. نولّد صور الأشكال برمجيًا ونقيس:</p>
+
+<div class="ixw" id="emb">
+<div class="ix-head"><span class="ix-badge">🧪 جرّب بنفسك</span><b>فضاء واحد للصورة والنص: اختر عبارة وشوف مين «تشبه» (٨.٢)</b></div>
+<div class="ix-controls" style="flex-direction:column;align-items:stretch;gap:8px">
+<div id="emb-imgs" style="display:flex;gap:10px"></div>
+<div id="emb-txts" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+<div id="emb-bars" style="margin-top:4px"></div>
+<div class="ix-note" id="emb-read" style="margin:0"></div>
+</div>
+<div class="ix-note">ثلاث «صور» وعدة عبارات، كلها نقاط في فضاء واحد (هنا ثنائي الأبعاد للتوضيح؛ CLIP الحقيقي ٥١٢ بُعدًا). التشابه = جيب التمام (٠.١). العبارة تنجّم أقرب صورة بلا أي تدريب على فئات — هذا هو <b>التصنيف zero-shot</b>: بدل طبقة تصنيف مدربة، تكتب الفئات كنصوص وتقارن الاتجاهات. لاحظ إن «شكل لونه أحمر» تلمّ الفئة بالإشارة للّون مو الشكل — الاشتراك في أي خاصية يقرّب المتجهات.</div>
+</div>
+<script>
+(function(){
+var IMGS=[
+ {id:"A",label:"صورة ١",svg:'<svg viewBox="0 0 60 60" width="60" height="60"><circle cx="30" cy="30" r="20" fill="#E07856"/></svg>',v:[0.95,0.31]},
+ {id:"B",label:"صورة ٢",svg:'<svg viewBox="0 0 60 60" width="60" height="60"><rect x="12" y="12" width="36" height="36" fill="#3a7bb5"/></svg>',v:[0.28,0.96]},
+ {id:"C",label:"صورة ٣",svg:'<svg viewBox="0 0 60 60" width="60" height="60"><polygon points="30,8 52,50 8,50" fill="#2d7a60"/></svg>',v:[-0.60,0.80]}];
+var TXTS=[
+ {t:"دائرة حمراء",v:[0.90,0.44]},
+ {t:"مربع أزرق",v:[0.35,0.94]},
+ {t:"مثلث أخضر",v:[-0.55,0.83]},
+ {t:"شكل لونه أحمر",v:[0.78,0.22]},
+ {t:"شكل أزرق",v:[0.45,0.85]}];
+var imgsEl=document.getElementById("emb-imgs"),txtsEl=document.getElementById("emb-txts"),barsEl=document.getElementById("emb-bars"),readEl=document.getElementById("emb-read");
+function cos(a,b){var d=a[0]*b[0]+a[1]*b[1],na=Math.sqrt(a[0]*a[0]+a[1]*a[1]),nb=Math.sqrt(b[0]*b[0]+b[1]*b[1]);return d/(na*nb)}
+IMGS.forEach(function(im){
+ var d=document.createElement("div");
+ d.id="emb-card-"+im.id;
+ d.style.cssText="flex:1;text-align:center;padding:8px 6px;border:2px solid var(--border);border-radius:10px;background:var(--surface-2);transition:border-color .3s";
+ d.innerHTML=im.svg+'<div style="font-size:11.5px;margin-top:4px;color:var(--ink-soft)">'+im.label+'</div><div id="emb-val-'+im.id+'" style="font-size:12px;font-weight:700;direction:ltr"></div>';
+ imgsEl.appendChild(d);
+});
+var sel=null;
+TXTS.forEach(function(tx){
+ var b=document.createElement("button");
+ b.className="ix-btn";b.textContent=tx.t;
+ b.onclick=function(){sel=tx;upd();document.querySelectorAll("#emb-txts .ix-btn").forEach(function(x){x.style.background="";x.style.color=""});b.style.background="var(--gold)";b.style.color="#fff"};
+ txtsEl.appendChild(b);
+});
+function upd(){
+if(!sel)return;
+var best=null,bestS=-2;
+barsEl.innerHTML="";
+IMGS.forEach(function(im){
+ var s=cos(sel.v,im.v);
+ if(s>bestS){bestS=s;best=im}
+ var row=document.createElement("div");
+ row.style.cssText="display:flex;align-items:center;gap:8px;margin:3px 0";
+ var pct=Math.max(0,(s+1)/2)*100;
+ row.innerHTML='<span style="width:52px;font-size:11.5px;color:var(--ink-soft)">'+im.label+'</span>'
+ +'<div style="flex:1;background:var(--surface-2);border-radius:6px;height:14px;overflow:hidden"><div id="emb-bar-'+im.id+'" style="height:100%;width:0;background:linear-gradient(90deg,#2d7a60,#D9A86C);transition:width .5s;border-radius:6px"></div></div>'
+ +'<span style="width:56px;font-size:12px;direction:ltr;text-align:left">'+s.toFixed(3)+'</span>';
+ barsEl.appendChild(row);
+ document.getElementById("emb-val-"+im.id).textContent=s.toFixed(3);
+ setTimeout(function(){document.getElementById("emb-bar-"+im.id).style.width=pct+"%"},30);
+});
+IMGS.forEach(function(im){document.getElementById("emb-card-"+im.id).style.borderColor=(im===best)?"var(--gold)":"var(--border)"});
+readEl.innerHTML="أقرب صورة للعبارة «"+sel.t+"»: <b style='color:var(--terra)'>"+best.label+"</b> (تشابه "+bestS.toFixed(3)+") — التصنيف zero-shot: بلا أي تدريب، مجرد مقارنة اتجاهات في الفضاء المشترك.";
+}
+document.querySelector("#emb-txts .ix-btn").click();
+})();
+</script>
+
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>from PIL import Image, ImageDraw
 from transformers import CLIPProcessor, CLIPModel
 
@@ -16768,6 +17097,7 @@ print("  الفرق هو «قيمة الخصائص المسبقة»: كل شيء
 <section class="stage-section" id="p9"><div class="stage-hero terra" style=""><span class="big-num">٩</span><div class="eyebrow">توسّع وإنتاج</div><h2>الإنتاج: من ملف تجريبي إلى خدمة مراقَبة وآمنة</h2><div class="tools">FastAPI · Pydantic · TestClient · سجل JSONL · guardrails</div></div><details class="en-box" open dir="ltr"><summary>English summary</summary><p class="en-text">Production is a harness around a model, and the harness is what you test. We built a real FastAPI service over the phase-6 vector store with Pydantic validation, role-based pre-filtering, verified citations, JSONL request logging, and a guard chain for abstention. Calibration exposed the hard truth: no linear separator exists between in-domain and out-of-domain queries (a legit query scored 0.306 while an off-topic one scored 0.462), so the service layers guards - a similarity threshold, a top1-top2 margin, and a domain gate - each catching what the measured data says it can. Six integration tests pass via TestClient (valid query, abstention, permission boundary, prompt-injection input guard, invalid body, invalid role), and 30 mixed requests produced p50/p95 latency, token estimates, and cost per 1000 requests with explicitly placeholder prices. Docker, vLLM and GGUF serving are documented with ready commands but explicitly NOT executed here (no containers/GPU in the build environment) - the guide's contract: nothing is presented as run unless it was run.</p><div class="en-terms"><b>Key terms:</b> <span>service harness</span><span>TestClient</span><span>abstention guard chain</span><span>calibration</span><span>JSONL logging</span><span>cost accounting</span><span>secrets</span></div></details><div class="intro-box"><b>وين وصلنا؟</b> كل قطعة الإنتاج موجودة عندك من المراحل السابقة: القاعدة (٦.١٣)، والامتناع (٦.٩)، والسجل (٧.١٣)، والتكلفة (٤.١١)، والقياس (٥). هذي المرحلة تركّبها في <b>خدمة واحدة</b> وتختبرها باختبارات فعلية. <b>عقد الصدق:</b> كل شيء بالأسفل نُفِّذ وقت تحرير الدليل (FastAPI ٠.١٤١.١ على CPU مع نموذج تضمين ٦.١٣) — ما عدا قسم ٩.٣ (Docker وvLLM وGGUF) معلَّم صراحة «غير منفَّذ هنا» لأن بيئة البناء بلا حاويات وبلا GPU، والأوامر جاهزة للنسخ كما هي.</div>
 
 <h3 class="sec-title">٩.١ المعايرة أولًا: الامتناع قرار مقيس، مو عتبة سحرية</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">الطبيب الحصيف يقول «الفحص ما يكفي للتشخيص، نحتاج تحليلًا إضافيًا» — وهذا جواب محترم مو فشل. النموذج اللي يجاوب على كل شيء «بثقة» أخطر من طبيب متسرع: خطؤه يرتدي لباس اليقين. الامتناع («ما أعرف من المعطيات») قرار يُقاس ويُعاير مثل أي قرار آخر: متى يكون الصمت أرخص من التخمين؟ الجواب رقمي بحت بحسب تكلفة الخطأ.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>قبل كتابة الخدمة: كيف تعرف متى يقول النظام «لا أعرف»؟ قِس (top1، والهامش top1−top2) لأسئلة داخل المجال وخارجه. النتيجة كانت مفاجأة حقيقية أثناء البناء: <b>لا يوجد فاصل خطي</b> — سؤال مشروع («كيف أحذف بياناتي») أعلى تشابهه ٠.٣٠٦ بينما سؤال خارج المجال («وش رأيك بالطقس») ٠.٤٦٢! أي عتبة وحدة تفقد في الاتجاهين. الحل الإنتاجي: <b>سلسلة حواجز</b> — كل حاجز يمسك ما يقيسه:</p>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre># ---------- العتبة تُقاس لا تُخمّن: مسح (top1, margin) كشف تداخلًا حقيقيًا ----------
 ids = list(DOCS.keys())
@@ -16856,6 +17186,7 @@ def ask(req: AskIn):
 <p><b>اقرأ تصميم الخدمة:</b> (١) المدخل موثق بـPydantic (طول، ونوع role بحرفين فقط). (٢) الفلتر قبل البحث (٦.١٠): عميل لا يرى وثائق الموظفين ولو كانت الأقرب دلاليًا. (٣) الامتناع عبر السلسلة: عتبة ٠.٣٠ (تحت أدنى top1 مشروع مقيس ٠.٣٠٦) ← هامش ٠.٠٣ (فوق أعلى هامش مضلل مقيس: ٠.٠٢٦ لسؤال الكوبون للعميل — سألنا عن كوبون فأجابته سياسة الإرجاع!) ← بوابة نطاق (تُستبدل في الإنتاج بمصنّف نوايا أو قاضٍ مقيَّم ٥.٤). (٤) المولّد <code class="inline">generate()</code> قابل للتبديل: هنا استخراجي حتمي لاختبار الـ harness — نفس فلسفة ScriptedModel في ٧.٢: ما نختبره هو الحماية والبنية، والنموذج يُستبدل بلا مساس بالفحوص. (٥) كل اقتباس يتحقق حرفيًا قبل الخروج (٦.٩).</p>
 
 <h3 class="sec-title">٩.٢ الاختبارات هي المواصفة، والمحاسبة قبل الفاتورة</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">عقد مقاول: لا توقع قبل توافق خطيًا على «وش معنى شغل مضبوط» (الاختبارات) و«كيف تثبت الالتزام» (المحاسبة). في الإنتاج نفس الشي: الاختبارات ليست زينة تقنية — هي <b>العقد المكتوب</b> بينك وبين النموذج: هذه المدخلات يجب أن تجيب كذا، وهذه الحالات يجب أن تمتنع. قبل أول فاتورة GPU، تأكد أن «العقد» موقّع ومختبَر — وإلا فأنت تدفع لسلوك ما أحد يضمنه.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre># ---------- الاختبارات (هي المواصفة: تشتغل وتفشل) ----------
 print("\nالاختبارات (TestClient — نفس ما يعمل في CI):")
 r1 = client.post("/ask", json={"q": "how long do I have to return an item", "role": "customer"})
@@ -16966,6 +17297,7 @@ print(f"  عينة من السجل: {LOG[1]}")</pre></div>
 <section class="stage-section" id="p10"><div class="stage-hero terra" style=""><span class="big-num">١٠</span><div class="eyebrow">توسّع وإنتاج · المشروع الختامي</div><h2>الكابستون: مشروعك الختامي بعقد قبول</h2><div class="tools">RAG + agent + evals + خدمة + توثيق — على حالة سعودية حقيقية</div></div><details class="en-box" open dir="ltr"><summary>English summary</summary><p class="en-text">The capstone is not lessons - it is a project contract: seven steps, each with acceptance criteria you can mechanically check, tying together everything the guide built. You pick a real Saudi use case with public documents (PDPL-aware), build retrieval (BM25 + deep normalization + dense embeddings + hybrid), define evals BEFORE improving (locked test set, annotator kappa), generate with verified citations and measured abstention, add an agent layer with allowlists, JSONL tracing and pass^k measurement, serve it behind FastAPI with the six production tests and cost accounting, and document it with a model card and a clean git history where every number regenerates from one script. Failure is defined explicitly: extra abstention is acceptable; a permission leak or an unverified citation is not.</p><div class="en-terms"><b>Key terms:</b> <span>acceptance criteria</span><span>locked test set</span><span>model card</span><span>reproducibility</span><span>pass^k</span><span>abstention policy</span></div></details><div class="intro-box"><b>ليش هذي المرحلة مو دروس؟</b> لأنك تعلمت كل القطع: القاعدة (٦)، والتقييم (٥)، والوكيل (٧)، والخدمة (٩)، والعربية (وحدة ★)، والـ git (مرجع B). المتبقي هو أن <b>تركّبها على حالة حقيقية تملكها أنت</b> — وهنا يصير كل رقم من بياناتك لا من أمثلة الدليل، وهذا شرط المشروع لا ترف. القاعدة أدناه: سبع خطوات، كل واحدة <b>بمعيار قبول تفحصه بنفسك</b> مو بشعورك، ومرتبطة بالمرحلة اللي تعلمتها منها. لو فشل معيار: تصلّح أو توثّق — ما تتجاوزه.</div>
 
 <h3 class="sec-title">المشروع: مساعد بحث على وثائق جهة حقيقية (بالعربية)</h3>
+<details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">رحلة الحج المصغرة: كل ما تعلمته في المراحل السابقة يمتحن في مشروع واحد حقيقي — لا تمارين معزولة بل نظام متكامل يواجه فوضى الوثائق الفعلية. المشاريع الختامية هكذا تكشف «فهم القطع» من «حفظ القطع»: حيث تعرف أي أداة تسحب من جرابك لكل مفاجأة. خذ وقتك، وعامل كل عطل كأنه درس مدفوع الثمن مقدمًا.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>اختر جهة/مجالًا له <b>وثائق عامة رسمية</b> (سياسات، أسئلة شائعة، أنظمة منشورة — النص الرسمي من مصدره الموثوق لا نسخ ثانوية). تبني مساعدًا يجيب أسئلة المستخدمين <b>باستشهاد حرفي من الوثائق، ويمتنع خارجها، ويخدمها عبر API، ويوثّق كل شيء</b>. وحدود معلنة منذ اليوم الأول: لا بيانات شخصية حقيقية في الفهرسة أو السجلات، والنص القانوني يُعرض كبحث لا رأيًا قانونيًا (تحذير صريح في الـ UI والتوثيق، وراجع PDPL مع مختص لجانب البيانات).</p>
 <table class="cmp">
 <tr><th>#</th><th>الخطوة</th><th>تسوّي</th><th>معيار القبول (تفحصه آليًا أو بالعد)</th><th>تعلمتها في</th></tr>
@@ -17220,6 +17552,15 @@ document.querySelectorAll('.figure svg').forEach(svg=>svg.addEventListener('clic
 /* glossary */
 function glFilter(q){q=(q||'').trim().toLowerCase();let n=0;document.querySelectorAll('.glx-item').forEach(it=>{const hide=q&&!it.dataset.term.includes(q)&&!it.textContent.toLowerCase().includes(q);it.classList.toggle('hide',!!hide);if(!hide)n++;});const c=document.getElementById('glxCount');if(c)c.textContent=n;}
 function glMode(m){const g=document.getElementById('glxGrid');g.classList.remove('en-only','ar-only');if(m!=='both')g.classList.add(m);document.querySelectorAll('.glx-mode button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));}
+/* ===== زر الشرح المبسّط ===== */
+(function(){
+var b=document.getElementById("simpleBtn");if(!b)return;
+function apply(on){document.body.classList.toggle("hide-simple",!on);b.classList.toggle("simple-on",on);
+try{localStorage.setItem("ai2_simple",on?"1":"0")}catch(e){}}
+var on=true;try{on=(localStorage.getItem("ai2_simple")||"1")==="1"}catch(e){}
+apply(on);
+b.onclick=function(){apply(document.body.classList.contains("hide-simple"))};
+})();
 /* init */
 buildIndex(); refreshProgress(); restoreQuiz();
 const h=(location.hash||'').slice(1);
