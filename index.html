@@ -8554,6 +8554,62 @@ note: dropping noisy data is a decision, not a free fix: first find out WHY the 
 <h3 class="sec-title">الخطوة ٦: المعايرة (Calibration)</h3>
 <details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">خبير يقول «أنا متأكد ٩٠٪» ويصيب ٩ مرات من ١٠ — هذا معايَر. خبير يقول «٩٠٪» ويصيب ٦٠٪ — واثق زيادة عن اللزوم. النماذج غالبًا واثقة أكثر مما تستحق، والمعايرة عملية «ضبط شارة الثقة» لتطابق الواقع. بدونها كل قراراتك المبنية على العتبات (أراجع هذه الحالة تلقائيًا؟) مبنية على وهم دقة.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>لو ستستخدم الاحتمال في قرار تكلفة (الخطوة ٧)، لازم «٣٠٪» تعني أن ٣٠٪ من هذي الحالات تغادر فعلًا. نقيس: متوسط الاحتمال المتوقّع مقابل المشاهَد لكل خُمس من الدرجات، ودرجة <b>Brier</b> (متوسط مربع الفرق بين الاحتمال والنتيجة):</p>
+
+<div class="ixw" id="cal">
+<div class="ix-head"><span class="ix-badge">🧪 جرّب بنفسك</span><b>شارة الثقة: حرّك الثقة الزائدة وشوف منحنى الموثوقية وECE (الخطوة ٦)</b></div>
+<div class="ix-controls"><label>انحياز الثقة: <output id="cal-b">+0.15</output></label>
+<input type="range" id="cal-sl" min="-30" max="30" value="15">
+<span class="ix-note" id="cal-read" style="margin:0;flex:1 1 100%"></span></div>
+<svg id="cal-svg" viewBox="0 0 380 200"></svg>
+<div class="ix-note">الخط الأخضر المتقطع = الكمال (الثقة المعلنة = الدقة الفعلية). الأعمدة الذهبية = متوسط ثقة النموذج في كل سلة درجات، والنقاط = دقته الفعلية. زحزح المنزلق يمينًا: الأعمدة تطفو فوق نقاطها (واثق زيادة عن اللزوم — الحالة الشائعة) وECE يرتفع؛ يسارًا: تواضع زائد يهدر قرارات كنت تستطيع أتمتتها. القيمة قريبة من صفر هي هدف المعايرة — لا أن تكون واثقًا، بل أن تكون صادق الثقة.</div>
+</div>
+<script>
+(function(){
+var NS="http://www.w3.org/2000/svg",svg=document.getElementById("cal-svg");
+function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e}
+var W=380,H=200,L=40,T=12;
+function x(c){return L+c*(W-L-16)}
+function y(a){return H-30-a*(H-52)}
+el("line",{x1:L,y1:H-30,x2:W-16,y2:H-30,stroke:"#c9d8d1"});
+el("line",{x1:L,y1:H-30,x2:L,y2:T,stroke:"#c9d8d1"});
+[0,0.25,0.5,0.75,1].forEach(function(v){
+ el("line",{x1:x(v),y1:H-33,x2:x(v),y2:H-27,stroke:"#c9d8d1"});
+ el("text",{x:x(v),y:H-16,"font-size":9,"text-anchor":"middle",fill:"#888"}).textContent=Math.round(v*100)+"%";
+ el("line",{x1:L-3,y1:y(v),x2:L+3,y2:y(v),stroke:"#c9d8d1"});
+ el("text",{x:L-6,y:y(v)+3,"font-size":9,"text-anchor":"end",fill:"#888"}).textContent=Math.round(v*100)+"%";
+});
+el("line",{x1:x(0),y1:y(0),x2:x(1),y2:y(1),stroke:"#2d7a60","stroke-dasharray":"5 4","stroke-width":1.5});
+el("text",{x:x(0.86),y:y(0.93),"font-size":9,fill:"#2d7a60"}).textContent="الكمال";
+var bins=[];
+for(var i=1;i<=8;i++){
+ var t=(i-0.5)/8;
+ bins.push({t:t,bar:el("rect",{x:x(t)-9,width:18,fill:"rgba(217,168,108,0.75)",rx:2}),dot:el("circle",{r:4,fill:"#E07856"})});
+}
+var sl=document.getElementById("cal-sl");
+function upd(){
+var bias=sl.value/100;
+document.getElementById("cal-b").textContent=(bias>=0?"+":"")+(bias*100).toFixed(0)+"%";
+var ece=0;
+bins.forEach(function(b){
+ var c=Math.min(0.98,Math.max(0.02,b.t+bias+(b.t-0.5)*Math.abs(bias)*0.4));
+ var top=Math.min(y(b.t),y(c));
+ var bh=Math.max(2,Math.abs(y(c)-y(b.t)));
+ b.bar.setAttribute("x",x(b.t)-9);
+ b.bar.setAttribute("y",top);
+ b.bar.setAttribute("height",bh);
+ b.dot.setAttribute("cx",x(b.t));b.dot.setAttribute("cy",y(b.t));
+ ece+=Math.abs(c-b.t)/8;
+});
+var verdict="";
+if(ece<0.03)verdict="معايَر تقريبًا ✅";
+else if(bias>0)verdict="واثق زيادة عن اللزوم: يعلن "+Math.abs(bias*100).toFixed(0)+"٪ فوق قدرته";
+else verdict="متواضع زيادة: يخفي قدرته ويثق أقل من الواقع";
+document.getElementById("cal-read").innerHTML="ECE (متوسط انفصال الشارة عن الواقع) = <b>"+ece.toFixed(3)+"</b> — "+verdict;
+}
+sl.oninput=upd;upd();
+})();
+</script>
+
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre><span class="c"># يعتمد على الكود السابق في نفس الدرس (انسخه أول)</span>
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import brier_score_loss
@@ -12463,6 +12519,75 @@ z
 <details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">استطلاع لـ١٠٠ شخص قال إن ٥٣٪ مع القرار — فهل الأغلبية معه فعلًا؟ هامش الخطأ يقول: الفرق عن ٥٠٪ أصغر من ضجيج العينة، فلا تستنتج شيًا. كل رقم تقييم (دقة نموذج، رضا مستخدمين) عنده «هامش ارتجاف» هذا — والفرق بين نموذجين داخل الهامش ليس تحسنًا بل ضوضاء. قبل تعلن فائزًا، اسأل: هل الفارق أكبر من ارتجاف العينة؟<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <h4 class="sub-title">النظرية</h4>
 <p>الـ eval تجربة، ودرجتك تقدير من <b>عيّنة أسئلة</b>. لدقة p على n سؤال: الخطأ المعياري SE = √(p(1−p)/n)، والفاصل ±١.٩٦·SE. وعند مقارنة نظامين على <b>نفس الأسئلة</b> يجب تحليل <b>الفروق على مستوى كل سؤال (paired)</b>: صعوبة الأسئلة تتشارك فيها الأنظمة فتُلغى من الفرق، فيصغر الخطأ المعياري بقدر ارتباط درجات النظامين.</p>
+
+<div class="ixw" id="bsc">
+<div class="ix-head"><span class="ix-badge">🧪 جرّب بنفسك</span><b>هامش الارتجاف: أعِد التقييم وشوف كيف «يرتجف» الرقم (٥.٣)</b></div>
+<div class="ix-controls">
+<button class="ix-btn" id="bsc-go">🎲 أعِد تشكيل العينة (Bootstrap)</button>
+<label>B = <output id="bsc-B">300</output> إعادة تشكيل</label>
+<span class="ix-note" id="bsc-read" style="margin:0;flex:1 1 100%"></span></div>
+<svg id="bsc-svg" viewBox="0 0 380 170"></svg>
+<div class="ix-note">النقاط أعلى الرسم = نتائج أسئلة التقييم (أخضر صحيح / أحمر خطأ). كل ضغطة تسحب ٣٠٠ «عينة بديلة» من نفس الأسئلة (مع تكرار وبحذف عشوائي)، تحسب دقة كل عينة، وترسم توزيع الدرجات الممكنة. الشريط الذهبي = فترة الثقة ٩٥٪: أي فروق بين نموذجين داخل هذا الشريط مجرد ارتجاف عينة — مو دليل تحسّن. وكل ضغطة تعطي شريطًا مختلفًا قليلًا: حتى «فترة الثقة» نفسها لها ارتجافها!</div>
+</div>
+<script>
+(function(){
+var NS="http://www.w3.org/2000/svg",svg=document.getElementById("bsc-svg");
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e}
+var rnd=mulberry32(11);
+var S=[];
+for(var i=0;i<40;i++)S.push(rnd()<0.725?1:0);
+var mean=S.reduce(function(a,b){return a+b},0)/S.length;
+var W=380,H=170,LO=0.3,HI=1.0;
+function xOf(v){return 24+(v-LO)/(HI-LO)*(W-34)}
+el("line",{x1:24,y1:150,x2:W-10,y2:150,stroke:"#c9d8d1"});
+[0.4,0.5,0.6,0.7,0.8,0.9,1.0].forEach(function(v){
+ el("line",{x1:xOf(v),y1:148,x2:xOf(v),y2:154,stroke:"#c9d8d1"});
+ el("text",{x:xOf(v),y:163,"font-size":9,"text-anchor":"middle",fill:"#888"}).textContent=(v*100)+"%";
+});
+S.forEach(function(s,i2){
+ el("circle",{cx:24+i2*(W-40)/40,cy:14,r:4,fill:s?"#2d7a60":"#E07856","fill-opacity":0.85});
+});
+var band=el("rect",{y:34,height:114,fill:"rgba(217,168,108,0.25)"});
+var mline=el("line",{y1:30,y2:150,stroke:"#2d7a60","stroke-width":2,"stroke-dasharray":"5 4"});
+var mtxt=el("text",{"font-size":10,fill:"#2d7a60","font-weight":700});
+var hist=[];
+var nb=34;
+for(var b=0;b<nb;b++)hist.push(el("rect",{x:26+b*(W-40)/nb,width:(W-40)/nb-1.5,y:148,height:0,fill:"#9db0a8","fill-opacity":0.55}));
+var lbl=el("text",{x:W-12,y:44,"font-size":10,"text-anchor":"end",fill:"#b5812f","font-weight":700});
+function run(seed){
+var r2=mulberry32(seed);
+var means=[];
+for(var k=0;k<300;k++){
+ var s2=0;
+ for(var j=0;j<40;j++){var idx=Math.floor(r2()*40);s2+=S[idx]}
+ means.push(s2/40);
+}
+means.sort(function(a,b){return a-b});
+var lo=means[7],hi=means[292];
+var bins=[];
+for(var b2=0;b2<nb;b2++)bins[b2]=0;
+var mx=1;
+means.forEach(function(m){
+ var bi=Math.min(nb-1,Math.max(0,Math.floor((m-LO)/(HI-LO)*nb)));
+ bins[bi]++;if(bins[bi]>mx)mx=bins[bi];
+});
+for(var b3=0;b3<nb;b3++){
+ var hh=bins[b3]/mx*110;
+ hist[b3].setAttribute("y",148-hh);hist[b3].setAttribute("height",hh);
+}
+band.setAttribute("x",xOf(lo));band.setAttribute("width",xOf(hi)-xOf(lo));
+mline.setAttribute("x1",xOf(mean));mline.setAttribute("x2",xOf(mean));
+mtxt.setAttribute("x",Math.min(W-40,xOf(mean)+4));mtxt.setAttribute("y",28);mtxt.textContent="ملاحظك "+(mean*100).toFixed(1)+"%";
+lbl.textContent="CI 95%: ["+(lo*100).toFixed(1)+"%, "+(hi*100).toFixed(1)+"%]";
+var se=Math.sqrt(mean*(1-mean)/40);
+document.getElementById("bsc-read").innerHTML="الفترة من إعادة التشكيل: <b>["+(lo*100).toFixed(1)+"٪، "+(hi*100).toFixed(1)+"٪]</b> · الصيغة النظرية ±١٫٩٦·SE تعطي <b>["+(Math.max(0,(mean-1.96*se))*100).toFixed(1)+"٪، "+(Math.min(1,(mean+1.96*se))*100).toFixed(1)+"٪]</b> — لاحظ تطابقهما تقريبًا.";
+}
+document.getElementById("bsc-go").onclick=function(){run(Math.floor(Math.random()*1e9))};
+run(42);
+})();
+</script>
+
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre>import numpy as np
 
 rng = np.random.default_rng(0)
@@ -17099,6 +17224,59 @@ print("  الفرق هو «قيمة الخصائص المسبقة»: كل شيء
 <h3 class="sec-title">٩.١ المعايرة أولًا: الامتناع قرار مقيس، مو عتبة سحرية</h3>
 <details class="simple-box" open><summary>افهمها ببساطة أولًا</summary><div class="s-body">الطبيب الحصيف يقول «الفحص ما يكفي للتشخيص، نحتاج تحليلًا إضافيًا» — وهذا جواب محترم مو فشل. النموذج اللي يجاوب على كل شيء «بثقة» أخطر من طبيب متسرع: خطؤه يرتدي لباس اليقين. الامتناع («ما أعرف من المعطيات») قرار يُقاس ويُعاير مثل أي قرار آخر: متى يكون الصمت أرخص من التخمين؟ الجواب رقمي بحت بحسب تكلفة الخطأ.<span class="s-bridge">والآن للتفصيل الدقيق ↓</span></div></details>
 <p>قبل كتابة الخدمة: كيف تعرف متى يقول النظام «لا أعرف»؟ قِس (top1، والهامش top1−top2) لأسئلة داخل المجال وخارجه. النتيجة كانت مفاجأة حقيقية أثناء البناء: <b>لا يوجد فاصل خطي</b> — سؤال مشروع («كيف أحذف بياناتي») أعلى تشابهه ٠.٣٠٦ بينما سؤال خارج المجال («وش رأيك بالطقس») ٠.٤٦٢! أي عتبة وحدة تفقد في الاتجاهين. الحل الإنتاجي: <b>سلسلة حواجز</b> — كل حاجز يمسك ما يقيسه:</p>
+
+<div class="ixw" id="abs">
+<div class="ix-head"><span class="ix-badge">🧪 جرّب بنفسك</span><b>الامتناع مقابل التغطية: حرّك عتبة الثقة واختر مقايضة خدمتك (٩.١)</b></div>
+<div class="ix-controls"><label>أمتنع إذا كانت الثقة أقل من <output id="abs-t">0.80</output></label>
+<input type="range" id="abs-sl" min="50" max="99" value="80">
+<span class="ix-note" id="abs-read" style="margin:0;flex:1 1 100%"></span></div>
+<svg id="abs-svg" viewBox="0 0 380 150"></svg>
+<div class="ix-note">كل نقطة = سؤال: أخضر أجاب صح، أحمر أخطأ، وموقعها الأفقي = ثقة النموذج. المنطقة الرمادية يسار العتبة = «أمتنع». ارفع العتبة: تتقلص التغطية (تجاوب أقل) وترتفع دقة المُجاب وتتهرب من معظم النقاط الحمراء — لكن لاحظ: بعض الأخطاء الحمراء عالية الثقة (متأكد وغلط!) وبعض الصحيحة منخفضة الثقة، فما يوجد فاصل خطي مثالي، والعتبة تُختار من تكلفة الخطأ في خدمتك أنت، مو من عتبة «سحرية».</div>
+</div>
+<script>
+(function(){
+var NS="http://www.w3.org/2000/svg",svg=document.getElementById("abs-svg");
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function el(n,a){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e}
+var rnd=mulberry32(23);
+var items=[];
+for(var i=0;i<70;i++){
+ var conf=0.35+rnd()*0.63;
+ var pOk=Math.min(0.97,conf*0.55+0.35+rnd()*0.18);
+ items.push({c:conf,ok:rnd()<pOk});
+}
+var W=380;
+function xOf(c){return 14+c*(W-28)}
+el("line",{x1:14,y1:120,x2:W-14,y2:120,stroke:"#c9d8d1"});
+[0.4,0.6,0.8,1.0].forEach(function(v){
+ el("line",{x1:xOf(v),y1:117,x2:xOf(v),y2:123,stroke:"#c9d8d1"});
+ el("text",{x:xOf(v),y:136,"font-size":9,"text-anchor":"middle",fill:"#888"}).textContent=v.toFixed(1);
+});
+var shade=el("rect",{x:14,y:8,width:100,height:104,fill:"#9db0a8","fill-opacity":0.18});
+var thr=el("line",{y1:8,y2:120,stroke:"#D9A86C","stroke-width":2.5,"stroke-dasharray":"6 4"});
+items.forEach(function(it){
+ el("circle",{cx:xOf(it.c),cy:18+((it.c*137)%(80)),r:4,fill:it.ok?"#2d7a60":"#E07856","fill-opacity":0.85});
+});
+var sl=document.getElementById("abs-sl");
+function upd(){
+var t=sl.value/100;
+document.getElementById("abs-t").textContent=t.toFixed(2);
+thr.setAttribute("x1",xOf(t));thr.setAttribute("x2",xOf(t));
+shade.setAttribute("width",Math.max(0,xOf(t)-14));
+var ans=items.filter(function(it){return it.c>=t});
+var ok=ans.filter(function(it){return it.ok}).length;
+var wrongs=items.filter(function(it){return !it.ok}).length;
+var avoided=wrongs-(ans.length-ok);
+var cov=ans.length/items.length*100, acc=ans.length?ok/ans.length*100:0;
+var warn="";
+if(cov<45)warn=" — <b style='color:var(--terra)'>خدمة صامتة أكثر من اللازم!</b>";
+else if(acc<75&&cov>80)warn=" — <b style='color:var(--terra)'>تجاوب كثيرًا وتخطئ</b>";
+document.getElementById("abs-read").innerHTML="التغطية: <b>"+cov.toFixed(0)+"٪</b> من الأسئلة تجاوب · دقة المُجاب: <b>"+acc.toFixed(1)+"٪</b> · أخطاء تجنّبتها: <b>"+avoided+" من "+wrongs+"</b> خطأ"+warn;
+}
+sl.oninput=upd;upd();
+})();
+</script>
+
 <div class="code-wrap"><button class="copy-btn" onclick="copyCode(this)">📋 نسخ</button><pre># ---------- العتبة تُقاس لا تُخمّن: مسح (top1, margin) كشف تداخلًا حقيقيًا ----------
 ids = list(DOCS.keys())
 D = embed(list(DOCS.values()))
