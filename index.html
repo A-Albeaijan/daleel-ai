@@ -17578,18 +17578,25 @@ if(h && document.getElementById(h)) goTo(h);
 (function(){
 var fab=document.getElementById("cbFab"),panel=document.getElementById("cbPanel"),msgs=document.getElementById("cbMsgs"),inb=document.getElementById("cbIn"),chipsEl=document.getElementById("cbChips");
 var MODE="guide",OLLAMA_OK=false,MODELS=[],MODEL=null;
+var OLLAMA_URL="http://localhost:11434";try{OLLAMA_URL=localStorage.getItem("ai2_ollama_url")||OLLAMA_URL}catch(e){}
 (function(){var row=document.getElementById("cbModeRow");
 var btn=document.createElement("button");btn.className="cb-chip";btn.id="cbModeBtn";btn.textContent="الوضع الموسّع (Ollama): جارٍ الفحص…";btn.style.borderColor="#D9A86C";btn.style.fontWeight="700";btn.disabled=true;
 var sel=document.createElement("select");sel.id="cbModelSel";sel.style.cssText="display:none;background:var(--surface-2);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:4px 8px;font-size:11.5px;font-family:inherit";
 var hint=document.createElement("small");hint.id="cbModeHint";hint.style.cssText="flex:1 1 100%;color:#b8ccc4;font-size:10.5px";
 row.appendChild(btn);row.appendChild(sel);row.appendChild(hint);
+var gear=document.createElement("button");gear.className="cb-chip";gear.textContent="⚙";gear.style.cssText="font-size:12px;padding:2px 9px";gear.title="عنوان خادم Ollama (للجوال: IP جهازك)";
+var setRow=document.createElement("div");setRow.style.cssText="display:none;gap:6px;margin-top:6px;flex:1 1 100%;align-items:center";
+setRow.innerHTML='<input placeholder="http://192.168.1.20:11434" style="flex:1;min-width:0;background:var(--surface-2);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:4px 8px;font-size:11.5px;direction:ltr;font-family:inherit"><button class="cb-chip" style="font-size:11.5px">حفظ</button>';
+row.appendChild(gear);row.appendChild(setRow);
+gear.onclick=function(){setRow.style.display=setRow.style.display==="none"?"flex":"none";var ip=setRow.querySelector("input");if(ip&&ip.value==="")ip.value=OLLAMA_URL};
+setRow.querySelector("button").onclick=function(){var v=setRow.querySelector("input").value.trim();if(v){if(v.charAt(v.length-1)==="/")v=v.slice(0,-1);try{localStorage.setItem("ai2_ollama_url",v)}catch(e){}location.reload()}};
 btn.onclick=function(){if(!OLLAMA_OK)return;MODE=MODE==="ollama"?"guide":"ollama";
 btn.textContent=MODE==="ollama"?"الوضع الموسّع (Ollama): مفعّل 🧠":"الوضع الموسّع (Ollama): مفعّل — اضغط للرجوع للبحث";
 btn.style.background=MODE==="ollama"?"#D9A86C":"transparent";btn.style.color=MODE==="ollama"?"#1B5E4A":"#b8ccc4";
 sel.style.display=MODE==="ollama"?"inline-block":"none";
 addMsg("bot",MODE==="ollama"?"تفعّل الوضع الموسّع: بجاوب من نموذجك المحلي، مسنودًا بمقاطع الدليل اللي لها علاقة — وأجاوب حتى أسئلة الذكاء الاصطناعي برّاه. تذكير ٥.٠: النموذج قد يهلوس، تحقق من المهم.":"رجعنا لوضع البحث في الدليل.");
 };
-function ping(){return Promise.race([fetch("http://localhost:11434/api/tags"),new Promise(function(_,rej){setTimeout(function(){rej(new Error("timeout"))},4000)})])}
+function ping(){return Promise.race([fetch(OLLAMA_URL+"/api/tags"),new Promise(function(_,rej){setTimeout(function(){rej(new Error("timeout"))},4000)})])}
 ping().then(function(r){return r.json()}).then(function(j){
 OLLAMA_OK=true;MODELS=(j.models||[]).map(function(m){return m.name});MODEL=MODELS[0]||null;
 btn.disabled=false;btn.textContent="الوضع الموسّع (Ollama): متاح ✅";
@@ -17638,7 +17645,7 @@ function ollamaAnswer(q){
  var sys="أنت مساعد تعليمي تابع لدليل عربي لتعلّم الذكاء الاصطناعي. أجب بالعربية بوضوح وإيجاز. إن كانت المقاطع المرفقة ذات صلة بالسؤال فاعتمد عليها أساسًا واذكر المرحلة أو الدرس؛ وإن كان السؤال خارجها فأجب من معرفتك العامة في الذكاء الاصطناعي. لا تختلق أرقامًا ولا مصادر، وإن لم تعرف قل: لا أعرف.";
  var user=q+(ctx?"\n\nمقاطع من الدليل:\n"+ctx:"");
  var m=addMsg("bot","🧠 "+MODEL+" يفكر…");
- fetch("http://localhost:11434/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},
+ fetch(OLLAMA_URL+"/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},
   body:JSON.stringify({model:MODEL,stream:false,options:{num_ctx:4096},messages:[{role:"system",content:sys},{role:"user",content:user}]})})
  .then(function(r){return r.json()})
  .then(function(j){var txt=(j.message&&j.message.content)||"ما رد النموذج — جرّب نموذجًا آخر من القائمة";
